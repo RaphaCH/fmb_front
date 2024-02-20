@@ -274,7 +274,7 @@ function App() {
       date.setDate(date.getDate() + 1);
       const formattedDate = date.toISOString().substring(0, 10);
       const isWeekend: boolean =
-        publicHolidays.includes(formattedDate) ||
+        // publicHolidays.includes(formattedDate) ||
         [0, 6].indexOf(new Date(formattedDate).getDay()) !== -1;
       days.push({
         workDate: formattedDate,

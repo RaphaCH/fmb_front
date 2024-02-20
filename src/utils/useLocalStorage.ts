@@ -29,7 +29,7 @@ const useLocalStorage = () => {
         const blob: Blob = await res.blob();
         const file = new File([blob], f.name, { type: 'application/pdf' });
         fileList.items.add(file);
-        // console.log(fileList, file, file);
+        console.log(fileList, file, file);
         // fetch(f.base64)
         //   .then((res) => res.blob())
         //   .then((blob) => {

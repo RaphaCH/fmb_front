@@ -189,12 +189,12 @@ const SubmitAndExportPDF = ({
 
   const getCellStyle = (data) => {
     if (
-      data.cell.raw === 'WE' ||
+      data.cell.raw === 'Weekend' ||
       data.cell.raw.startsWith('Sat') ||
       data.cell.raw.startsWith('Sun')
     ) {
       data.cell.styles.fillColor = '#DFDFDF';
-      if (data.cell.raw === 'WE') {
+      if (data.cell.raw === 'Weekend') {
         data.cell.styles.textColor = '#878787';
         data.cell.styles.fontStyle = 'italic';
       }
@@ -213,7 +213,7 @@ const SubmitAndExportPDF = ({
       return day[`workPlaceAddress${time}`]?.addressName;
     }
     if (day.isWeekend) {
-      return 'WE';
+      return 'Weekend';
     }
     // If neither work day or weekend, return 'paid time off' abbreviation,
     return 'Absence';
@@ -260,8 +260,7 @@ const SubmitAndExportPDF = ({
     });
 
     /** TABLE OF ADDRESSES **/
-    const addressesStartY: number =
-      mainWorkplace.addressName === 'Residential address' ? 45 : 50;
+    const addressesStartY = 50;
     // Title
     doc
       .setFont(undefined, 'bold')
@@ -307,7 +306,7 @@ const SubmitAndExportPDF = ({
     });
 
     // Address table notes
-    const addrTabNotes = '*Distance from the official place of residence';
+    const addrTabNotes = '*Distance from the residential address';
     doc
       .setFont(undefined, 'normal')
       .setFontSize(7)
@@ -325,16 +324,16 @@ const SubmitAndExportPDF = ({
       );
 
     // Calendar table notes - abbreviation descriptions
-    const abbrDesc = 'WE = Weekend';
-    doc
-      .setFont(undefined, 'normal')
-      .text(
-        abbrDesc,
-        doc.internal.pageSize.width -
-          doc.getTextDimensions(abbrDesc).w -
-          docMargin,
-        addressesEndY + doc.getTextDimensions(addrTabNotes).h + 10
-      );
+    // const abbrDesc = 'WE = Weekend';
+    // doc
+    //   .setFont(undefined, 'normal')
+    //   .text(
+    //     abbrDesc,
+    //     doc.internal.pageSize.width -
+    //       doc.getTextDimensions(abbrDesc).w -
+    //       docMargin,
+    //     addressesEndY + doc.getTextDimensions(addrTabNotes).h + 10
+    //   );
 
     // Creating array of data to fill the cells in the following calendar table
     const calendarData = [];
@@ -354,7 +353,6 @@ const SubmitAndExportPDF = ({
 
     // TO DO: Improve table layout (with AM and PM)
     // Creating calendar table
-    let calendarTableY: number | undefined = 0;
     (doc as any).autoTable({
       theme: 'grid',
       styles: { fontSize: 9 },
@@ -362,9 +360,6 @@ const SubmitAndExportPDF = ({
       body: calendarData,
       startY: addressesEndY + doc.getTextDimensions(addrTabNotes).h + 12,
       columnStyles: getColumnStyles(),
-      didDrawPage: function (data) {
-        calendarTableY = data.cursor?.y;
-      },
       didParseCell: function (data) {
         if (data.section === 'body' && data.cell.raw) {
           getCellStyle(data);
