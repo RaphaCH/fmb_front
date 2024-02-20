@@ -53,6 +53,7 @@ function App() {
     if (hasUpdatedDate) {
       handleWorkdayData();
       setHasUpdatedDate(false);
+      setDisplayedDate(selectedDate);
     }
   }, [hasUpdatedDate]);
 
@@ -321,8 +322,7 @@ function App() {
             data={monthData}
             resAddress={resAddress}
             addresses={addresses}
-            selectedDate={selectedDate}
-            setMonthData={setMonthData}
+            displayedDate={displayedDate}
             updateDate={(date: Date) => handleUpdatedDate(date)}
             updateWorkdaysByMonth={(updatedMonth: WMonth) =>
               updateWorkdaysByMonth(updatedMonth)

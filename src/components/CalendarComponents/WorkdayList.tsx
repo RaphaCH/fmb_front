@@ -8,6 +8,7 @@ type ListProps = {
   month: WDay[];
   addresses: Addresses;
   resAddress: Address;
+  displayedDate: Date;
   updateDay: (editedDay: WDay) => void;
   updateMonth: (editedMonth: WDay[]) => void;
   isSplitDay: boolean;
@@ -29,6 +30,7 @@ const WorkdayList = ({
   month,
   addresses,
   resAddress,
+  displayedDate,
   updateDay,
   updateMonth,
   isSplitDay,
@@ -39,7 +41,7 @@ const WorkdayList = ({
 
   useEffect(() => {
     findFirstFullWeek();
-  }, []);
+  }, [displayedDate]);
 
   const findFirstFullWeek = () => {
     let i = month.findIndex((d) => new Date(d.workDate).getDay() === 1);

@@ -1,15 +1,14 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Address, WDay, WMonth } from '../models/types';
 import WorkdayList from './CalendarComponents/WorkdayList';
-import MonthPicker from "./MonthPicker";
+import MonthPicker from './MonthPicker';
 import SplitDayToggle from './CalendarComponents/SplitDayToggle';
 
 type CalendarProps = {
   data: WMonth;
   resAddress: Address;
   addresses: Address[];
-  selectedDate: Date;
-  setMonthData: Dispatch<SetStateAction<WMonth>>;
+  displayedDate: Date;
   updateDate: (date: Date) => void;
   updateWorkdaysByMonth: (updatedMonth: WMonth) => void;
 };
@@ -17,8 +16,7 @@ const Calendar = ({
   data,
   resAddress,
   addresses,
-  selectedDate,
-  setMonthData,
+  displayedDate,
   updateDate,
   updateWorkdaysByMonth,
 }: CalendarProps) => {
@@ -53,12 +51,13 @@ const Calendar = ({
           month={data.workdays}
           updateMonth={updateMonth}
         />
-        <MonthPicker updateDate={updateDate} selectedDate={selectedDate} />
+        <MonthPicker updateDate={updateDate} displayedDate={displayedDate} />
       </div>
       <WorkdayList
         month={data.workdays}
         addresses={addresses}
         resAddress={resAddress}
+        displayedDate={displayedDate}
         updateDay={updateDay}
         updateMonth={updateMonth}
         isSplitDay={isSplitDay}

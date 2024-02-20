@@ -4,14 +4,14 @@ import '../assets/react-datepicker-stylesheets/datepicker.scss';
 import calendarIcon from '../assets/icons/calendar_purple.png';
 
 type Props = {
-  selectedDate: Date;
+  displayedDate: Date;
   updateDate: (date: Date) => void;
 };
 type CustomButtonProps = {
   value?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
-const MonthPicker = ({ selectedDate, updateDate }: Props) => {
+const MonthPicker = ({ displayedDate, updateDate }: Props) => {
   const currentYear = new Date().getFullYear();
   const minDate: Date = new Date(currentYear, 0);
   const maxDate: Date = new Date(currentYear, 11);
@@ -43,7 +43,7 @@ const MonthPicker = ({ selectedDate, updateDate }: Props) => {
   return (
     <div className='date-picker-container'>
       <DatePicker
-        selected={selectedDate}
+        selected={displayedDate}
         onChange={(newDate: Date) => changeMonth(newDate)}
         dateFormat='MMM y'
         minDate={minDate}
