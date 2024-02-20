@@ -1,10 +1,17 @@
-import { StorageTypes } from "../models/enums";
-import { Address, MainWorkplace, Workdays } from "../models/types";
+import { StorageTypes } from '../models/enums';
+import { Address, MainWorkplace, Workdays } from '../models/types';
 
 const useLocalStorage = () => {
   const setItem = (
     key: string,
-    value: string | Address | Address[] | FileList | Workdays | MainWorkplace | null
+    value:
+      | string
+      | Address
+      | Address[]
+      | FileList
+      | Workdays
+      | MainWorkplace
+      | null
   ) => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
@@ -20,7 +27,7 @@ const useLocalStorage = () => {
       await array.forEach(async (f) => {
         const res: Response = await fetch(f.base64);
         const blob: Blob = await res.blob();
-        const file = new File([blob], f.name, { type: "application/pdf" });
+        const file = new File([blob], f.name, { type: 'application/pdf' });
         fileList.items.add(file);
         // fetch(f.base64)
         //   .then((res) => res.blob())

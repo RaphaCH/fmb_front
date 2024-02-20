@@ -1,12 +1,11 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { Tooltip } from "react-tooltip";
-import { ModalDetails } from "../models/types";
-import { ModalTypes } from "../models/enums";
-import trash from "../assets/icons/trash.png";
-import trashPurple from "../assets/icons/trash_purple.png";
-import info from "../assets/icons/info.png";
-import Collapsible from "./Collapsible";
-import { arrayBuffer } from "stream/consumers";
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Tooltip } from 'react-tooltip';
+import { ModalDetails } from '../models/types';
+import { ModalTypes } from '../models/enums';
+import trash from '../assets/icons/trash.png';
+import trashPurple from '../assets/icons/trash_purple.png';
+import info from '../assets/icons/info.png';
+import Collapsible from './Collapsible';
 
 type AttachmentsProps = {
   files: FileList | null;
@@ -28,33 +27,33 @@ const Attachments = ({
     const existingFiles = await files;
     if (!validateSize(newFiles)) {
       openModal({
-        message: "Your file sizes are too large",
+        message: 'Your file sizes are too large',
         type: ModalTypes.ERROR,
       });
     } else {
-    const updatedFileList = new DataTransfer();
-    if (existingFiles) {
-      for (const file of existingFiles) {
-        updatedFileList.items.add(file);
+      const updatedFileList = new DataTransfer();
+      if (existingFiles) {
+        for (const file of existingFiles) {
+          updatedFileList.items.add(file);
+        }
       }
-    }
-    if (newFiles) {
-      for (const file of newFiles) {
-        updatedFileList.items.add(file);
+      if (newFiles) {
+        for (const file of newFiles) {
+          updatedFileList.items.add(file);
+        }
       }
-    }
-    (document.getElementById("uploadedFiles") as HTMLInputElement).files =
-      updatedFileList.files;
-    setFiles(updatedFileList.files);
-    const toStore = [];
-    for (const file of updatedFileList.files) {
-      const compatibleFile = {
-        name: file.name,
-        base64: await toBase64(file),
-      };
-      toStore.push(compatibleFile);
-    }
-    saveFiles(toStore);
+      (document.getElementById('uploadedFiles') as HTMLInputElement).files =
+        updatedFileList.files;
+      setFiles(updatedFileList.files);
+      const toStore = [];
+      for (const file of updatedFileList.files) {
+        const compatibleFile = {
+          name: file.name,
+          base64: await toBase64(file),
+        };
+        toStore.push(compatibleFile);
+      }
+      saveFiles(toStore);
     }
   };
 
@@ -85,7 +84,7 @@ const Attachments = ({
 
   const deleteFile = (index: number) => {
     const uploadedFiles: FileList | null = (
-      document.getElementById("uploadedFiles") as HTMLInputElement
+      document.getElementById('uploadedFiles') as HTMLInputElement
     ).files;
     if (uploadedFiles) {
       const updatedFileList = new DataTransfer();
@@ -94,104 +93,87 @@ const Attachments = ({
           updatedFileList.items.add(uploadedFiles[i]);
         }
       }
-      (document.getElementById("uploadedFiles") as HTMLInputElement).files =
+      (document.getElementById('uploadedFiles') as HTMLInputElement).files =
         updatedFileList.files;
       setFiles(updatedFileList.files);
     }
   };
 
-  // const closeModal = () => {
-  //   setIsModalOpen(false);
-  //   setModalDetails({
-  //     message: "Unknown alert",
-  //     type: ModalTypes.ERROR,
-  //   });
-  // };
-
   const FileItem = ({ file, index }: FileItemProps) => {
     const [isDeleteHovered, setIsDeleteHovered] = useState<boolean>(false);
 
-    // const openPreviewModal = () => {
-    //   setModalDetails({
-    //     message: "",
-    //     type: ModalTypes.PREVIEW_URL,
-    //     url: URL.createObjectURL(file),
-    //   });
-    //   setIsModalOpen(true);
-    // };
-
     return (
-      <li className="flex w-fit">
+      <li className='flex w-fit'>
         <button
-          className="iconBtn"
+          className='iconBtn'
           onMouseEnter={() => setIsDeleteHovered(true)}
           onMouseLeave={() => setIsDeleteHovered(false)}
           onClick={() => deleteFile(index)}
-          data-tooltip-id="tooltip-delete"
-          data-tooltip-content="Delete"
+          data-tooltip-id='tooltip-delete'
+          data-tooltip-content='Delete'
         >
           {!isDeleteHovered ? (
-            <img src={trash} alt="Delete" width={15} />
+            <img src={trash} alt='Delete' width={15} />
           ) : (
-            <img src={trashPurple} alt="Delete" width={15} />
+            <img src={trashPurple} alt='Delete' width={15} />
           )}
         </button>
         <p
-          className="mouseHover"
+          className='mouseHover'
           onClick={() =>
             openModal({
-              message: "",
+              message: '',
               type: ModalTypes.PREVIEW_URL,
               url: URL.createObjectURL(file),
             })
           }
-          data-tooltip-id="tooltip-preview-file"
-          data-tooltip-content="Preview file"
+          data-tooltip-id='tooltip-preview-file'
+          data-tooltip-content='Preview file'
         >
           {file.name}
         </p>
-        <Tooltip id="tooltip-delete" />
-        <Tooltip id="tooltip-preview-file" />
+        <Tooltip id='tooltip-delete' />
+        <Tooltip id='tooltip-preview-file' />
       </li>
     );
   };
 
   const AddAttachmentsForm = () => {
     return (
-      <div className="content-container attachments text-sm">
+      <div className='attachments text-sm flex'>
         <form>
-          <div className="flex">
+          <div className='flex'>
             <h1>
               Upload PDF files to be appended to the document (e.g. your rental
               or mortgage contract).
             </h1>
             <img
-              className="info-icon"
+              className='info-icon'
               src={info}
-              alt="Info"
-              data-tooltip-id="tooltip-attachment-info"
-              data-tooltip-content="Only
-          accepts files in PDF format. Multiple files can be selected at once."
+              alt='Info'
+              data-tooltip-id='tooltip-attachment-info'
+              data-tooltip-content='Only
+          accepts files in PDF format. Multiple files can be selected at once.'
             />
           </div>
-          <Tooltip id="tooltip-attachment-info" />
+          <Tooltip id='tooltip-attachment-info' />
           <label
-            htmlFor="uploadedFiles"
-            className="btn btn-primary btn-outline"
+            htmlFor='uploadedFiles'
+            className='btn btn-primary btn-outline'
           >
             Choose files
           </label>
           <input
-            type="file"
-            id="uploadedFiles"
+            type='file'
+            id='uploadedFiles'
             multiple
-            accept="application/pdf"
+            accept='application/pdf'
             onChange={(e) => addFiles(e.target.files)}
           />
         </form>
         {files && files.length > 0 && (
-          <div>
-            <h2 className="subSectionTitle -ml-10">Uploaded files</h2>
+          <div className='ml-[40px]'>
+            <h2 className='subSectionTitle'>Uploaded files</h2>
             <ul>
               {Array.from(files)?.map((file, index) => (
                 <FileItem key={index} file={file} index={index} />
@@ -199,17 +181,12 @@ const Attachments = ({
             </ul>
           </div>
         )}
-        {/* <AlertModal
-          modalIsOpen={isModalOpen}
-          modalDetails={modalDetails}
-          closeModal={closeModal}
-        /> */}
       </div>
     );
   };
   return (
-    <div className="container">
-      <Collapsible title="Attachments" child={<AddAttachmentsForm />} />
+    <div className='container'>
+      <Collapsible title='Attachments' child={<AddAttachmentsForm />} />
     </div>
   );
 };

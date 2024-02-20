@@ -15,14 +15,14 @@
 
 /* --- Global --- */
 @font-face {
-  font-family: "graphik";
+  font-family: 'graphik';
   src: url(./fonts/Graphik/Graphik-Regular.ttf);
-  font-family: "sectra";
+  font-family: 'sectra';
   src: url(./fonts/GT_Sectra_Fine/GT-Sectra-Fine-Regular.otf);
 }
 body {
   margin: 30px;
-  font-family: "graphik", "Arial", sans-serif;
+  font-family: 'graphik', 'Arial', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 1rem;
@@ -31,6 +31,11 @@ body {
 .container {
   display: inline;
   margin: 20px 10px;
+}
+.header-title {
+  color: var(--corePurple2);
+  font-size: 1.4rem;
+  font-weight: 300;
 }
 .sectionTitle {
   width: 95vw;
@@ -48,8 +53,8 @@ body {
   font-weight: 300;
 }
 .subSectionTitle {
-  padding: 10px;
-  margin: 10px;
+  padding: 0 10px;
+  margin: 0 10px 5px 10px;
   font-size: 0.9rem;
   text-transform: uppercase;
   line-height: 20px;
@@ -66,6 +71,7 @@ body {
   border-radius: 0;
   font-size: 0.85rem;
   font-weight: 600;
+  color: #000;
 }
 .btn {
   height: 2.5rem;
@@ -75,16 +81,16 @@ body {
 .btn-primary {
   color: #fff;
 }
-input[type="checkbox"] {
+input[type='checkbox'] {
   border-radius: 3px;
   border-color: var(--darkGray);
 }
 header {
   display: flex;
-  text-align: center;
   justify-content: space-between;
-  align-items: flex-start;
-
+  align-items: center;
+  margin-bottom: 20px;
+  
   nav {
     display: flex;
     width: 275px;
@@ -100,7 +106,7 @@ hr {
   display: flex;
 }
 .formActions {
-  width: 200px;
+  width: 100px;
   margin-top: 100px;
 
   .btn-primary {
@@ -123,14 +129,7 @@ hr {
 }
 .mouseHover:hover {
   color: var(--corePurple2);
-
-  &:not(.input) {
-    cursor: pointer;
-  }
-
-  &.input {
-    cursor: text;
-  }
+  cursor: pointer;
 }
 .iconBtn {
   cursor: pointer;
@@ -140,10 +139,10 @@ hr {
 }
 .personalData,
 .attachments {
-  padding: 0 10px;
+  padding: 0 0 20px 20px;
 }
 .attachments {
-  input[type="file"] {
+  input[type='file'] {
     display: none;
   }
 
@@ -151,6 +150,11 @@ hr {
     cursor: pointer;
     width: 10px;
     height: 10px;
+  }
+
+  .btn {
+    margin: 20px 0;
+    width: 150px;
   }
 }
 .date-picker-container {
@@ -162,7 +166,7 @@ hr {
 
   .react-datepicker {
     &__header {
-      font-family: "graphik", "Arial", sans-serif;
+      font-family: 'graphik', 'Arial', sans-serif;
       font-weight: 600;
       border-bottom: 1px solid var(--accentPurple5);
     }
@@ -181,12 +185,12 @@ hr {
       margin-top: 7px;
     }
 
-    [aria-selected="true"] {
+    [aria-selected='true'] {
       background-color: var(--accentPurple5);
     }
 
-    [role="option"] {
-      font-family: "graphik", "Arial", sans-serif;
+    [role='option'] {
+      font-family: 'graphik', 'Arial', sans-serif;
 
       &:hover {
         background-color: var(--corePurple2);
@@ -208,6 +212,7 @@ hr {
   tr {
     display: grid;
     height: 100%;
+    font-size: 0.875rem;
   }
 
   &.split-days tr:not(.full-width) {
@@ -246,6 +251,7 @@ hr {
   line-height: 28px;
   height: 100%;
   background-color: inherit;
+  padding: 10px;
 }
 .collapse {
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
@@ -403,7 +409,7 @@ hr {
     }
   }
 }
-.client-list-name,
+/*.client-list-name,
 .client-list-label,
 .client-list-type {
   width: 20%;
@@ -416,7 +422,7 @@ hr {
   justify-content: center;
   align-items: center;
   margin: 0;
-}
+}*/
 
 div.error-space {
   height: 20px;
@@ -455,21 +461,6 @@ p.error-message {
   }
 }
 
-.disabled-dropdown-option {
-  pointer-events: none;
-  background-color: var(--lightGray);
-  color: var(--darkGray);
-}
-.active-dropdown-option {
-  cursor: pointer;
-  background-color: var(--corePurple2);
-  color: var(--accentPurple5);
-
-  &:hover {
-    color: #fff;
-  }
-}
-
 .collapsible-arrow {
   border: solid var(--corePurple1);
   padding: 7px;
@@ -501,42 +492,6 @@ p.error-message {
   }
 }
 
-.searchable-dropdown-container {
-  &.static {
-    ul {
-      height: 300px;
-      overflow-y: scroll;
-    }
-  }
-
-  &.collapsible {
-    .dropdown {
-      display: none;
-    }
-    &:hover {
-      .dropdown {
-        display: flex;
-        position: absolute;
-        left: 10px;
-        top: 170px;
-        margin-left: 14px;
-      }
-    }
-  }
-
-  .input-clear {
-    color: #000;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-}
-
-p.select-company-text {
-  color: var(--darkGray);
-  margin-top: 100px;
-}
-
 #eligibilityMessage {
   margin: 10px;
 }
@@ -557,4 +512,11 @@ p.select-company-text {
   justify-content: space-between;
   align-items: center;
   margin: 10px 0;
+}
+
+.disabled-input-field {
+  pointer-events: none;
+  background-color: oklch(0.670171 0.014429 106.783 / 0.2);
+  color: oklch(0.2 0 0 / 0.2);
+  border: none;
 }

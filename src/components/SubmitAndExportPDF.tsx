@@ -4,6 +4,7 @@ import autoTable from 'jspdf-autotable';
 import PDFMerger from 'pdf-merger-js/browser';
 import { Address, WDay, WMonth } from '../models/types';
 import logoSrc from '../assets/icons/Acc_Logo_Black_Purple_RGB.png';
+import { Tooltip } from 'react-tooltip';
 
 const MonthNames = [
   'January',
@@ -21,6 +22,7 @@ const MonthNames = [
 ];
 
 type Props = {
+  disabled: boolean;
   data: WMonth;
   userName: string;
   addresses: Address[];
@@ -31,6 +33,7 @@ type Props = {
 };
 
 const SubmitAndExportPDF = ({
+  disabled,
   data,
   userName,
   addresses,
@@ -97,7 +100,6 @@ const SubmitAndExportPDF = ({
   };
 
   const getOccurrence = (addName: string) => {
-    console.log(data.workdays);
     let count = data.workdays.reduce(
       (val, add) =>
         add.workPlaceAddressAm?.addressName === addName ? val + 0.5 : val + 0,
@@ -108,7 +110,6 @@ const SubmitAndExportPDF = ({
         add.workPlaceAddressPm?.addressName === addName ? val + 0.5 : val + 0,
       0
     );
-    console.log(addName, count);
     return count;
   };
 
@@ -208,9 +209,7 @@ const SubmitAndExportPDF = ({
   };
 
   const getLocation = (day: WDay, time: string) => {
-    console.log(day);
     if (day[`isWorkday${time}`]) {
-      console.log(day[`isWorkday${time}`]);
       return day[`workPlaceAddress${time}`]?.addressName;
     }
     if (day.isWeekend) {
@@ -225,16 +224,16 @@ const SubmitAndExportPDF = ({
    */
   const generatePDF = async () => {
     const month: string = MonthNames[data.month];
-    const pdfName: string = `FMB-workplace-document_${userName.replace(
+    const pdfName = `FMB-workplace-document_${userName.replace(
       / /g,
       '_'
     )}_${month}-${data.year}`;
 
     const doc = new jsPDF('p', 'mm');
-    const docMargin: number = 15;
+    const docMargin = 15;
 
     /** TITLE **/
-    const title: string = `FMB Usual Workplace Document - ${month} ${data.year}`;
+    const title = `FMB Usual Workplace Document - ${month} ${data.year}`;
     doc
       .setFontSize(12)
       .setFont(undefined, 'bold')
@@ -268,13 +267,16 @@ const SubmitAndExportPDF = ({
     // Creating array of data to fill the cells in the following table of addresses
     const addressesData = [];
     addresses.forEach((add: Address) => {
-      const rowData = [
-        add.addressName,
-        add.address,
-        getOccurrence(add.addressName),
-        add.distanceFromHome,
-      ];
-      addressesData.push(rowData);
+      const occurrence: number = getOccurrence(add.addressName);
+      if (occurrence > 0) {
+        const rowData = [
+          add.addressName,
+          add.address,
+          occurrence,
+          add.distanceFromHome,
+        ];
+        addressesData.push(rowData);
+      }
     });
 
     // Creating address table
@@ -373,7 +375,10 @@ const SubmitAndExportPDF = ({
         `I acknowledge that the information above is correct and confirm I have worked the majority of my working time from ${mainWorkplace.addressName}.`,
         docMargin,
         calendarTableY + 10,
-        { maxWidth: doc.internal.pageSize.width - 2 * docMargin, align: 'left' }
+        {
+          maxWidth: doc.internal.pageSize.width - 2 * docMargin,
+          align: 'left',
+        }
       );
 
     if (files && Array.from(files).length > 0) {
@@ -399,16 +404,29 @@ const SubmitAndExportPDF = ({
   };
 
   return (
-    <button
-      className='btn btn-primary'
-      style={{ marginLeft: '10px' }}
-      disabled={
-        !mainWorkplace || (distance && distance > 10) || userName === ''
-      }
-      onClick={handleButtonClick}
-    >
-      Save and generate PDF
-    </button>
+    <>
+      <div
+        className='w-fit'
+        data-tooltip-id='tooltip-disabled'
+        data-tooltip-content={
+          !userName
+            ? 'Please add your full name'
+            : !mainWorkplace
+            ? 'Please add your residential address'
+            : 'You are not eligible to receive a reimbursement'
+        }
+      >
+        <button
+          className='btn btn-primary disabled-hover'
+          style={{ marginLeft: '10px' }}
+          disabled={disabled}
+          onClick={handleButtonClick}
+        >
+          Save and generate PDF
+        </button>
+      </div>
+      {disabled && <Tooltip id='tooltip-disabled' />}
+    </>
   );
 };
 

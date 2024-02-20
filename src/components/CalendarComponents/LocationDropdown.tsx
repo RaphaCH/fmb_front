@@ -1,7 +1,7 @@
-import React from "react";
-import downArrow from "../../assets/icons/downArrow_purple.png";
-import { Address, WDay } from "../../models/types";
-import { TimeOfDay } from "../../models/enums";
+import React from 'react';
+import downArrow from '../../assets/icons/downArrow_purple.png';
+import { Address, WDay } from '../../models/types';
+import { TimeOfDay } from '../../models/enums';
 
 type Props = {
   day: WDay;
@@ -49,23 +49,23 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
       <td
         className={
           time === TimeOfDay.PM
-            ? "cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30"
-            : "cellItem"
+            ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
+            : 'cellItem'
         }
       >
-        <div className="dropdown dropdown-bottom w-full flex justify-center text-center">
-          <div tabIndex={0} className="mouseHover selectLocation">
+        <div className='dropdown dropdown-bottom w-full flex justify-center text-center'>
+          <div tabIndex={0} className='mouseHover selectLocation'>
             {selectedAddress(time === TimeOfDay.FULL ? TimeOfDay.AM : time)}
-            <img src={downArrow} alt="arrow" />
+            <img src={downArrow} alt='arrow' />
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content px-5 shadow bg-base-100 w-fit z-10"
+            className='dropdown-content px-5 shadow bg-base-100 w-fit z-10'
           >
             {addresses.map((address, index) => {
               return (
                 <li
-                  className="p-2 mouseHover"
+                  className='p-2 mouseHover'
                   key={index}
                   onClick={() => changeLocation(address)}
                 >
@@ -82,8 +82,8 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
       <td
         className={
           time === TimeOfDay.PM
-            ? "cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30"
-            : "cellItem"
+            ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
+            : 'cellItem'
         }
       >
         <div>N/A</div>

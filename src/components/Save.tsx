@@ -1,6 +1,6 @@
-import React from "react";
-import SubmitAndExportPDF from "./SubmitAndExportPDF";
-import { Address, WMonth } from "../models/types";
+import React from 'react';
+import SubmitAndExportPDF from './SubmitAndExportPDF';
+import { Address, WMonth } from '../models/types';
 
 type Props = {
   saveData: () => void;
@@ -21,15 +21,18 @@ const Save = ({
   files,
 }: Props) => {
   return (
-    <div>
+    <div className='flex w-fit'>
       <button
-        className="btn btn-primary"
-        style={{ marginLeft: "10px" }}
+        className='btn btn-primary'
+        style={{ marginLeft: '10px' }}
         onClick={saveData}
       >
         Save
       </button>
       <SubmitAndExportPDF
+        disabled={
+          !mainWorkplace || (distance && distance > 10) || userName === ''
+        }
         data={monthData}
         userName={userName}
         addresses={addresses}

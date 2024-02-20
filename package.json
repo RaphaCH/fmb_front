@@ -1,8 +1,8 @@
 {
-  "name": "fmb-housing-tool-electron",
-  "productName": "fmb-housing-tool-electron",
+  "name": "fmb-housing-tool",
+  "productName": "FMB Housing Tool",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "An Accenture application to calculate and download proof of eligibility to receive a housing costs reimbursement through the Belgian Federal Mobility Budget",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -12,7 +12,7 @@
     "lint": "eslint --ext .ts,.tsx ."
   },
   "keywords": [],
-  "author": "h.masanjika",
+  "author": "Accenture",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -63,6 +63,7 @@
     "mini-css-extract-plugin": "^2.8.0",
     "pdf-merger-js": "^5.1.1",
     "react": "^18.2.0",
+    "react-datepicker": "^6.1.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.50.1",
     "react-modal": "^3.16.1",

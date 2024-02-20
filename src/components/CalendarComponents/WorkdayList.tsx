@@ -1,8 +1,8 @@
-import React from "react";
-import { Address, Addresses, WDay } from "../../models/types";
-import { TimeOfDay } from "../../models/enums";
-import DayItem from "./DayItem";
-import publicHolidays from "../../hr/public_holidays.json";
+import React from 'react';
+import { Address, Addresses, WDay } from '../../models/types';
+import { TimeOfDay } from '../../models/enums';
+import DayItem from './DayItem';
+import publicHolidays from '../../hr/public_holidays.json';
 
 type ListProps = {
   month: WDay[];
@@ -75,19 +75,19 @@ const WorkdayList = ({
 
   const Item = ({ day, index }: ItemProps) => {
     const date: Date = new Date(day.workDate);
-    const weekday: string = date.toLocaleDateString("en-gb", {
-      weekday: "short",
+    const weekday: string = date.toLocaleDateString('en-gb', {
+      weekday: 'short',
     });
-    const formattedDate: string = date.toLocaleDateString("en-gb", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "2-digit",
+    const formattedDate: string = date.toLocaleDateString('en-gb', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
     });
 
     return (
       <>
-        <tr className="even:bg-base-100 odd:bg-accent odd:bg-opacity-20">
-          <td className="flex !flex-row justify-between cellItem first:bg-accent first:bg-opacity-30">
+        <tr className='even:bg-base-100 odd:bg-accent odd:bg-opacity-20'>
+          <td className='flex !flex-row justify-between cellItem first:bg-accent first:bg-opacity-30'>
             <div>{weekday}</div>
             <div>{formattedDate}</div>
           </td>
@@ -119,14 +119,15 @@ const WorkdayList = ({
           )}
         </tr>
         {isFirstFullWeekFriday(index, day) && (
-          <tr className="full-width">
-            <td className="p-0 border-none">
+          <tr className='full-width'>
+            <td className='p-0 border-none'>
               <button
-                className="btn btn-primary w-full"
+                className='btn btn-primary w-full'
                 onClick={() => autofillWeeks(index)}
               >
-                Click to fill the following weeks with the same arrangement as
-                above <span className="ml-3 mb-0.5 text-lg">{"\u21E9"}</span>
+                <span className='mr-3 mb-0.5 text-lg'>{'\u21E9'}</span>Click to
+                fill the following weeks with the same arrangement as above{' '}
+                <span className='ml-3 mb-0.5 text-lg'>{'\u21E9'}</span>
               </button>
             </td>
           </tr>
@@ -138,20 +139,22 @@ const WorkdayList = ({
   const SplitDayHeaders = () => {
     return (
       <thead>
-        <tr className="table-header-grid">
-          <th className="sticky bg-primary text-white row-span-2 header-date">Date</th>
-          <th className="sticky bg-primary text-white col-start-2 col-span-3">
+        <tr className='table-header-grid'>
+          <th className='sticky bg-primary text-white row-span-2 header-date'>
+            Date
+          </th>
+          <th className='sticky bg-primary text-white col-start-2 col-span-3'>
             Morning
           </th>
-          <th className="bg-primary text-white col-start-5 col-span-3">
+          <th className='bg-primary text-white col-start-5 col-span-3'>
             Afternoon
           </th>
-          <th className="bg-primary text-white bg-opacity-70">Location</th>
-          <th className="bg-primary text-white bg-opacity-70">Workday</th>
-          <th className="bg-primary text-white bg-opacity-70">Holiday</th>
-          <th className="bg-primary text-white bg-opacity-80">Location</th>
-          <th className="bg-primary text-white bg-opacity-80">Workday</th>
-          <th className="bg-primary text-white bg-opacity-80">Holiday</th>
+          <th className='bg-primary text-white bg-opacity-70'>Location</th>
+          <th className='bg-primary text-white bg-opacity-70'>Workday</th>
+          <th className='bg-primary text-white bg-opacity-70'>Holiday</th>
+          <th className='bg-primary text-white bg-opacity-80'>Location</th>
+          <th className='bg-primary text-white bg-opacity-80'>Workday</th>
+          <th className='bg-primary text-white bg-opacity-80'>Holiday</th>
         </tr>
       </thead>
     );
@@ -160,28 +163,30 @@ const WorkdayList = ({
   const NonSplitDayHeaders = () => {
     return (
       <thead>
-        <tr className="table-header-grid">
-          <th className="sticky top-0 bg-primary text-white header-date">Date</th>
-          <th className="sticky top-0 bg-primary text-white">Location</th>
-          <th className="sticky top-0 bg-primary text-white">Workday</th>
-          <th className="sticky top-0 bg-primary text-white">Holiday</th>
+        <tr className='table-header-grid'>
+          <th className='sticky top-0 bg-primary text-white header-date'>
+            Date
+          </th>
+          <th className='sticky top-0 bg-primary text-white'>Location</th>
+          <th className='sticky top-0 bg-primary text-white'>Workday</th>
+          <th className='sticky top-0 bg-primary text-white'>Holiday</th>
         </tr>
       </thead>
     );
   };
 
   return (
-    <div className="formContainer">
+    <div className='formContainer'>
       <div>
         <table
           className={
             isSplitDay
-              ? "relative w-full wTable split-days"
-              : "relative w-full wTable non-split-days"
+              ? 'relative w-full wTable split-days'
+              : 'relative w-full wTable non-split-days'
           }
         >
           {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
-          <tbody className="itemContainer">
+          <tbody className='itemContainer'>
             {month.map((day, index) => (
               <Item key={index} day={day} index={index} />
             ))}

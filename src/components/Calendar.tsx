@@ -1,10 +1,10 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { Address, WDay, WMonth } from "../models/types";
-import WorkdayList from "./WorkdayCalendar/WorkdayList";
-// import MonthPicker from "./MonthPicker";
-import SplitDayToggle from "./WorkdayCalendar/SplitDayToggle";
+import React, { Dispatch, SetStateAction, useState } from 'react';
+import { Address, WDay, WMonth } from '../models/types';
+import WorkdayList from './CalendarComponents/WorkdayList';
+import MonthPicker from "./MonthPicker";
+import SplitDayToggle from './CalendarComponents/SplitDayToggle';
 
-type WorkdayProps = {
+type CalendarProps = {
   data: WMonth;
   homeAddress: Address;
   addresses: Address[];
@@ -13,7 +13,7 @@ type WorkdayProps = {
   updateDate: (date: Date) => void;
   updateWorkdaysByMonth: (updatedMonth: WMonth) => void;
 };
-const Workday = ({
+const Calendar = ({
   data,
   homeAddress,
   addresses,
@@ -21,7 +21,7 @@ const Workday = ({
   setMonthData,
   updateDate,
   updateWorkdaysByMonth,
-}: WorkdayProps) => {
+}: CalendarProps) => {
   const [isSplitDay, setIsSplitDay] = useState<boolean>(
     data.workdays.some(
       (day: WDay) =>
@@ -45,15 +45,15 @@ const Workday = ({
 
   return (
     <div>
-      <h2 className="sectionTitle">Workdays</h2>
-      <div className="toggle-month-picker">
+      <h2 className='sectionTitle'>Calendar</h2>
+      <div className='toggle-month-picker'>
         <SplitDayToggle
           isSplitDay={isSplitDay}
           setIsSplitDay={setIsSplitDay}
           month={data.workdays}
           updateMonth={updateMonth}
         />
-        {/* <MonthPicker updateDate={updateDate} selectedDate={selectedDate} /> */}
+        <MonthPicker updateDate={updateDate} selectedDate={selectedDate} />
       </div>
       <WorkdayList
         month={data.workdays}
@@ -66,4 +66,4 @@ const Workday = ({
     </div>
   );
 };
-export default Workday;
+export default Calendar;

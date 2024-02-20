@@ -49,41 +49,13 @@ const AddAddress = ({ addresses, saveAddress, openModal }: Props) => {
     });
   };
 
-  // /**
-  //  * Adds a new residential address to an employee
-  //  * @param address - The address to be added
-  //  * @returns - True if the address was successfully added to the database, else false
-  //  */
-  // const addResidentialAddress = async (address: Address) => {
-  //   const promise = new Promise((resolve) => {
-  //     PostNewAddress(address).then((response) => {
-  //       if (response.status === 201) {
-  //         AddAddressToEmployee(employeeNumber, response.data.id).then(
-  //           (response) => {
-  //             if (response.status === 200) {
-  //               setForceUserUpdate(true);
-  //               resolve(true);
-  //             } else {
-  //               openModal({
-  //                 message: response.data.error,
-  //                 type: ModalTypes.ERROR,
-  //               });
-  //               resolve(false);
-  //             }
-  //           }
-  //         );
-  //       }
-  //     });
-  //   });
-  //   return Boolean(await promise);
-  // };
-
   /**
    * Handles the information entered when submitting a new address
    * and adds the address to the database if the information is valid.
    * @param data - The data (name, type and address) of the new address to be added
    */
   const handleSubmitData = async (data: AddressFormData) => {
+    data.name = data.name.trim();
     if (!validateName(data.name)) {
       setNameError(true);
     } else if (addressInfos) {
@@ -120,7 +92,11 @@ const AddAddress = ({ addresses, saveAddress, openModal }: Props) => {
    * @param value - The input field string value to be validated
    */
   const validateName = (value: string) => {
-    if (addresses.some((add) => add.addressName === value)) {
+    if (
+      addresses.some(
+        (add: Address) => add.addressName.toLowerCase() === value.toLowerCase()
+      )
+    ) {
       return false;
     }
     return true;
@@ -129,63 +105,79 @@ const AddAddress = ({ addresses, saveAddress, openModal }: Props) => {
   const AddAddressForm = () => {
     return (
       <div className='content-container map-form-container add-address'>
-        <form onSubmit={handleSubmit(handleSubmitData)}>
-          <label className='label'>
-            <span className='label-text'>Address name:</span>
-          </label>
-          <input
-            placeholder='Enter name'
-            className='input input-bordered w-full max-w-xs formInput'
-            {...register('name', {
-              onChange: () => {
-                setNameError(false);
-              },
-            })}
-            required
-            autoComplete='off'
-          />
-          {nameError && (
-            <p className='error-message'>
-              This name has already been used. Please choose a unique one.
-            </p>
-          )}
+        <div className='flex flex-col '>
+          <p className='text-xs'>A maximum of five addresses can be added.</p>
+          <form onSubmit={handleSubmit(handleSubmitData)}>
+            <label className='label'>
+              <span className='label-text'>Address name:</span>
+            </label>
+            <input
+              placeholder='Enter name'
+              className={
+                addresses.length > 5
+                  ? 'input input-bordered w-full max-w-xs formInput disabled-input-field'
+                  : 'input input-bordered w-full max-w-xs formInput'
+              }
+              {...register('name', {
+                onChange: () => {
+                  setNameError(false);
+                },
+              })}
+              required
+              autoComplete='off'
+            />
+            {nameError && (
+              <p className='error-message'>
+                This name has already been used. Please choose a unique one.
+              </p>
+            )}
 
-          <div
-            className={
-              nameError
-                ? 'flex items-end address-row'
-                : 'flex items-end address-row pt-[20px]'
-            }
-          >
-            <div>
-              <label className='label'>
-                <span className='label-text'>Address:</span>
-              </label>
-              <input
-                className='input input-bordered w-full max-w-xs formInput'
-                placeholder='Street, number, city'
-                {...register('address')}
-                required
-              />
+            <div
+              className={
+                nameError
+                  ? 'flex items-end address-row'
+                  : 'flex items-end address-row pt-[20px]'
+              }
+            >
+              <div>
+                <label className='label'>
+                  <span className='label-text'>Address:</span>
+                </label>
+                <input
+                  className={
+                    addresses.length > 5
+                      ? 'input input-bordered w-full max-w-xs formInput disabled-input-field'
+                      : 'input input-bordered w-full max-w-xs formInput'
+                  }
+                  placeholder='Street, number, city'
+                  {...register('address')}
+                  required
+                />
+              </div>
+              <button
+                type='button'
+                className={
+                  addresses.length > 5
+                    ? 'btn btn-primary'
+                    : 'btn btn-primary btn-outline'
+                }
+                disabled={addresses.length > 5}
+                onClick={() => {
+                  const input = getValues('address');
+                  handleFindAddress(input);
+                }}
+              >
+                Find
+              </button>
             </div>
             <button
-              type='button'
-              className='btn btn-primary btn-outline'
-              onClick={() => {
-                const input = getValues('address');
-                handleFindAddress(input);
-              }}
+              className='btn btn-primary save-new-address'
+              disabled={!addressInfos}
             >
-              Find
+              Save
             </button>
-          </div>
-          <button
-            className='btn btn-primary save-new-address'
-            disabled={!addressInfos}
-          >
-            Save
-          </button>
-        </form>
+          </form>
+        </div>
         {addressInfos && (
           <div className='comLocation add-address-details'>
             <img className='h-20' src={location} alt='location pin' />

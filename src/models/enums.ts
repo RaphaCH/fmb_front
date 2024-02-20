@@ -1,24 +1,24 @@
 export enum StorageTypes {
-  USER_NAME = "userName",
-  HOME_ADDRESS = "homeAddress",
-  ADDRESSES = "addresses",
-  FILES = "files",
-  WORKDAYS = "workdays",
-  MAINWORKPLACE = "mainWorkplace",
+  USER_NAME = 'userName',
+  HOME_ADDRESS = 'homeAddress',
+  ADDRESSES = 'addresses',
+  FILES = 'files',
+  WORKDAYS = 'workdays',
+  MAINWORKPLACE = 'mainWorkplace',
 }
 
 export enum ModalTypes {
-  ERROR = "ERROR",
-  CONFIRMATION = "CONFIRMATION",
-  SUCCESS = "SUCCESS",
-  ADDRESS = "ADDRESS",
-  PREVIEW_URL = "PREVIEW_URL",
+  ERROR = 'ERROR',
+  CONFIRMATION = 'CONFIRMATION',
+  SUCCESS = 'SUCCESS',
+  ADDRESS = 'ADDRESS',
+  PREVIEW_URL = 'PREVIEW_URL',
 }
 
 export enum TimeOfDay {
-  AM = "Am",
-  PM = "Pm",
-  FULL = "FullDay",
+  AM = 'Am',
+  PM = 'Pm',
+  FULL = 'FullDay',
 }
 
 export enum MonthIndexes {

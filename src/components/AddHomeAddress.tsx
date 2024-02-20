@@ -1,10 +1,10 @@
-import React, { useRef, useState } from "react";
-import Collapsible from "./Collapsible";
-import Maps from "./Maps";
-import { ModalTypes } from "../models/enums";
-import { APIAddress, Address, ModalDetails } from "../models/types";
-import GetCoordinates from "../axios/GetCoordinates";
-import location from "../assets/icons/location.png";
+import React, { useRef, useState } from 'react';
+import Collapsible from './Collapsible';
+import Maps from './Maps';
+import { ModalTypes } from '../models/enums';
+import { APIAddress, Address, ModalDetails } from '../models/types';
+import GetCoordinates from '../axios/GetCoordinates';
+import location from '../assets/icons/location.png';
 
 type Props = {
   homeAddress: Address;
@@ -32,7 +32,7 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
   const handleFindAddress = (address: string | undefined) => {
     if (!address) {
       openModal({
-        message: "Unable to find address. Please modify search.",
+        message: 'Unable to find address. Please modify search.',
         type: ModalTypes.ERROR,
       });
     } else {
@@ -40,7 +40,7 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
         if (!res?.formatted_address) {
           setAddressInfos(undefined);
           openModal({
-            message: "Unable to find address. Please modify search.",
+            message: 'Unable to find address. Please modify search.',
             type: ModalTypes.ERROR,
           });
         } else {
@@ -87,18 +87,18 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
   const saveAddress = () => {
     if (addressInfos) {
       saveHomeAddress({
-        addressName: "Home",
+        addressName: 'Home',
         address: addressInfos.formatted_address,
         addressCoordinates: addressInfos.geometry.location,
         distanceFromHome: 0,
       });
       openModal({
-        message: "Successfully added primary residential address",
+        message: 'Successfully added primary residential address',
         type: ModalTypes.SUCCESS,
       });
     } else {
       openModal({
-        message: "Must validate address before saving",
+        message: 'Must validate address before saving',
         type: ModalTypes.ERROR,
       });
     }
@@ -118,27 +118,27 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
 
   const AddAddressForm = () => {
     return (
-      <div className="content-container map-form-container add-address">
+      <div className='content-container map-form-container add-address'>
         <div>
-          <div className="flex items-end address-row">
+          <div className='flex items-end address-row'>
             <div>
-              <label className="label">
-                <span className="label-text">Address:</span>
+              <label className='label'>
+                <span className='label-text'>Address:</span>
               </label>
               <input
-                className="input input-bordered w-full max-w-xs formInput"
-                placeholder="Street, number, city"
-                type="text"
+                className='input input-bordered w-full max-w-xs formInput'
+                placeholder='Street, number, city'
+                type='text'
                 ref={inputRef}
-                defaultValue={addressInfos?.inputValueAddress ?? ""}
+                defaultValue={addressInfos?.inputValueAddress ?? ''}
               />
             </div>
             <button
-              type="button"
-              className="btn btn-primary btn-outline"
+              type='button'
+              className='btn btn-primary btn-outline'
               onClick={() => {
                 if (inputRef.current) {
-                  handleFindAddress(inputRef.current["value"]);
+                  handleFindAddress(inputRef.current['value']);
                 }
               }}
             >
@@ -146,7 +146,7 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
             </button>
           </div>
           <button
-            className="btn btn-primary save-new-address"
+            className='btn btn-primary save-new-address'
             disabled={
               !addressInfos ||
               (addressInfos &&
@@ -159,18 +159,18 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
           </button>
         </div>
         {addressInfos ? (
-          <div className="comLocation add-address-details">
-            <img className="h-20" src={location} alt="location pin" />
-            <p className="comAddress text-center">
+          <div className='comLocation add-address-details'>
+            <img className='h-20' src={location} alt='location pin' />
+            <p className='comAddress text-center'>
               {addressInfos.formatted_address}
             </p>
           </div>
         ) : (
-          <p className="add-address-details">
+          <p className='add-address-details'>
             Please add a residential address
           </p>
         )}
-        <div className="clientMapContainer">
+        <div className='clientMapContainer'>
           {addressInfos && (
             <Maps
               lat={addressInfos?.geometry?.location.lat}
@@ -182,9 +182,9 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
     );
   };
   return (
-    <div className="container">
+    <div className='container'>
       <Collapsible
-        title="Update residential address"
+        title='Update residential address'
         child={<AddAddressForm />}
         isCollapsed={isHomeAddress}
       />

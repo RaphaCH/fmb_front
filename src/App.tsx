@@ -16,7 +16,7 @@ import {
 import { ModalTypes, StorageTypes } from './models/enums';
 import AlertModal from './components/AlertModal';
 import AddressList from './components/AddressList';
-import Workday from './components/Workday';
+import Calendar from './components/Calendar';
 import AddHomeAddress from './components/AddHomeAddress';
 import Header from './components/Header';
 import EligibilityMessage from './components/EligibilityMessage';
@@ -216,7 +216,6 @@ function App() {
     const updatedAddressList: Address[] = [...addresses, address];
     setAddresses(updatedAddressList);
     setItem(StorageTypes.ADDRESSES, updatedAddressList);
-    console.log(mainWorkplace, distance);
   };
 
   const handleSaveFiles = (files) => {
@@ -330,7 +329,7 @@ function App() {
           deleteAddress={(address) => handleDeleteAddress(address)}
         />
         {monthData && (
-          <Workday
+          <Calendar
             data={monthData}
             homeAddress={homeAddress}
             addresses={addresses}

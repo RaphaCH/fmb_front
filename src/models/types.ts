@@ -1,4 +1,4 @@
-import { ModalTypes } from "./enums";
+import { ModalTypes } from './enums';
 
 export type Address = {
   addressName: string;

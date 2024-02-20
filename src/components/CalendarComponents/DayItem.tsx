@@ -1,8 +1,8 @@
-import React from "react";
-import WorkdayTypeRadioButtons from "./WorkdayTypeRadioButtons";
-import LocationDropdown from "./LocationDropdown";
-import { Address, WDay } from "../../models/types";
-import { TimeOfDay } from "../../models/enums";
+import React from 'react';
+import WorkdayTypeRadioButtons from './WorkdayTypeRadioButtons';
+import LocationDropdown from './LocationDropdown';
+import { Address, WDay } from '../../models/types';
+import { TimeOfDay } from '../../models/enums';
 
 type Props = {
   day: WDay;

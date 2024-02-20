@@ -1,12 +1,17 @@
-import type { Configuration } from "webpack";
+import type { Configuration } from 'webpack';
 
-import { rules } from "./webpack.rules";
-import { plugins } from "./webpack.plugins";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import { rules } from './webpack.rules';
+import { plugins } from './webpack.plugins';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 rules.push({
   test: /\.s[ac]ss$/i,
-  use: [MiniCssExtractPlugin.loader, "css-loader", "sass-loader", "postcss-loader"],
+  use: [
+    MiniCssExtractPlugin.loader,
+    'css-loader',
+    'sass-loader',
+    'postcss-loader',
+  ],
 });
 
 export const rendererConfig: Configuration = {
@@ -15,6 +20,6 @@ export const rendererConfig: Configuration = {
   },
   plugins,
   resolve: {
-    extensions: [".js", ".ts", ".jsx", ".tsx", ".scss"],
+    extensions: ['.js', '.ts', '.jsx', '.tsx', '.scss'],
   },
 };

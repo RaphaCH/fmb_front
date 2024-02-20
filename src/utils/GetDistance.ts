@@ -1,4 +1,4 @@
-import { AddressCoordinates } from "../models/types";
+import { AddressCoordinates } from '../models/types';
 
 export const getDistance = (
   latlngFrom: AddressCoordinates,
