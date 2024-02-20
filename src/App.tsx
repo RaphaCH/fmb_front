@@ -4,24 +4,15 @@ import useLocalStorage from './utils/useLocalStorage';
 import PersonalData from './components/PersonalData';
 import Save from './components/Save';
 import Attachments from './components/Attachments';
-import AddAddress from './components/AddAddress';
-import {
-  Address,
-  AddressCoordinates,
-  ModalDetails,
-  WDay,
-  WMonth,
-  Workdays,
-} from './models/types';
+import WorkplaceAddress from './components/WorkplaceAddress';
+import { Address, ModalDetails, WDay, WMonth, Workdays } from './models/types';
 import { ModalTypes, StorageTypes } from './models/enums';
 import AlertModal from './components/AlertModal';
-import AddressList from './components/AddressList';
 import Calendar from './components/Calendar';
-import AddHomeAddress from './components/AddHomeAddress';
+import ResidentialAddress from './components/ResidentialAddress';
 import Header from './components/Header';
 import EligibilityMessage from './components/EligibilityMessage';
 import { getDistance } from './utils/GetDistance';
-import { UseFormReset } from 'react-hook-form';
 
 function App() {
   const currentDate: Date = new Date();
@@ -41,8 +32,8 @@ function App() {
   const [files, setFiles] = useState<FileList | null>(
     getItem(StorageTypes.FILES) ?? []
   );
-  const [homeAddress, setHomeAddress] = useState<Address | undefined>(
-    getItem(StorageTypes.HOME_ADDRESS) ?? undefined
+  const [resAddress, setResAddress] = useState<Address | undefined>(
+    getItem(StorageTypes.RES_ADDRESS) ?? undefined
   );
   const [addresses, setAddresses] = useState<Address[]>(
     getItem(StorageTypes.ADDRESSES) ?? []
@@ -82,7 +73,7 @@ function App() {
     setWorkdayData(updatedWorkdays);
   };
 
-  const addHomeToWorkdays = (address: Address) => {
+  const addResToWorkdays = (address: Address) => {
     const updatedWorkdays = monthData.workdays.map((d) => {
       if (
         d.isWorkdayAm &&
@@ -167,7 +158,7 @@ function App() {
         newDistance = Number(
           getDistance(
             newMainWorkplace.addressCoordinates,
-            homeAddress.addressCoordinates
+            resAddress.addressCoordinates
           )
         );
       }
@@ -177,8 +168,10 @@ function App() {
     setDistance(newDistance);
   };
 
-  const handleSaveHomeAddress = (address: Address) => {
-    setHomeAddress(address);
+  const initializeFiles = () => {};
+
+  const handleSaveResAddress = (address: Address) => {
+    setResAddress(address);
     let addressList = [address];
     if (addresses.length > 0) {
       let modifiedAddressList = addresses;
@@ -186,7 +179,7 @@ function App() {
       modifiedAddressList = modifiedAddressList.map((add) => {
         return {
           ...add,
-          distanceFromHome: Number(
+          distanceFromResAdd: Number(
             getDistance(address.addressCoordinates, add.addressCoordinates)
           ),
         };
@@ -194,21 +187,21 @@ function App() {
       addressList = modifiedAddressList;
     }
     setAddresses(addressList);
-    setItem(StorageTypes.HOME_ADDRESS, address);
+    setItem(StorageTypes.RES_ADDRESS, address);
     setItem(StorageTypes.ADDRESSES, addressList);
-    addHomeToWorkdays(address);
+    addResToWorkdays(address);
     if (!mainWorkplace) {
       setItem('mainWorkplace', { address: address, distance: 0 });
       setMainWorkplace(address);
       setDistance(0);
-    } else if (mainWorkplace.addressName === 'Home') {
+    } else if (mainWorkplace.addressName === 'Res Address') {
       setMainWorkplace(address);
     } else {
       const updatedMainWorkplace = addressList.find(
         (a: Address) => a.addressName === mainWorkplace.addressName
       );
       setMainWorkplace(updatedMainWorkplace);
-      setDistance(updatedMainWorkplace.distanceFromHome);
+      setDistance(updatedMainWorkplace.distanceFromResAdd);
     }
   };
 
@@ -285,10 +278,10 @@ function App() {
         [0, 6].indexOf(new Date(formattedDate).getDay()) !== -1;
       days.push({
         workDate: formattedDate,
-        workPlaceAddressAm: isWeekend ? null : homeAddress,
+        workPlaceAddressAm: isWeekend ? null : resAddress,
         isWorkdayAm: !isWeekend,
         isHolidayAm: false,
-        workPlaceAddressPm: isWeekend ? null : homeAddress,
+        workPlaceAddressPm: isWeekend ? null : resAddress,
         isWorkdayPm: !isWeekend,
         isHolidayPm: false,
         isWeekend: isWeekend,
@@ -313,25 +306,21 @@ function App() {
           saveFiles={(files) => handleSaveFiles(files)}
           openModal={openModal}
         />
-        <AddHomeAddress
-          homeAddress={homeAddress}
-          saveHomeAddress={(address) => handleSaveHomeAddress(address)}
+        <ResidentialAddress
+          resAddress={resAddress}
+          saveResAddress={(address) => handleSaveResAddress(address)}
           openModal={openModal}
         />
-        <AddAddress
+        <WorkplaceAddress
           addresses={addresses}
           saveAddress={(address) => handleSaveNewAddress(address)}
           openModal={openModal}
-        />
-        <AddressList
-          homeAddress={homeAddress}
-          addresses={addresses}
           deleteAddress={(address) => handleDeleteAddress(address)}
         />
         {monthData && (
           <Calendar
             data={monthData}
-            homeAddress={homeAddress}
+            resAddress={resAddress}
             addresses={addresses}
             selectedDate={selectedDate}
             setMonthData={setMonthData}

@@ -7,23 +7,23 @@ import GetCoordinates from '../axios/GetCoordinates';
 import location from '../assets/icons/location.png';
 
 type Props = {
-  homeAddress: Address;
-  saveHomeAddress: (address: Address) => void;
+  resAddress: Address;
+  saveResAddress: (address: Address) => void;
   openModal: (modalDetails: ModalDetails) => void;
 };
-const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
+const ResidentialAddress = ({ resAddress, saveResAddress, openModal }: Props) => {
   const [addressInfos, setAddressInfos] = useState<undefined | APIAddress>(
-    homeAddress
+    resAddress
       ? {
-          formatted_address: homeAddress.address,
-          geometry: { location: homeAddress.addressCoordinates },
-          inputValueAddress: homeAddress.address,
+          formatted_address: resAddress.address,
+          geometry: { location: resAddress.addressCoordinates },
+          inputValueAddress: resAddress.address,
         }
       : undefined
   );
-  const isHomeAddress = homeAddress !== undefined;
+  const isResAddress = resAddress !== undefined;
   const inputRef = useRef<HTMLInputElement>();
-  // inputRef.current.value = homeAddress.address ?? "";
+  // inputRef.current.value = resAddress.address ?? "";
 
   /**
    * Verifies whether or not the address is valid
@@ -86,14 +86,14 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
    */
   const saveAddress = () => {
     if (addressInfos) {
-      saveHomeAddress({
-        addressName: 'Home',
+      saveResAddress({
+        addressName: 'Residential address',
         address: addressInfos.formatted_address,
         addressCoordinates: addressInfos.geometry.location,
-        distanceFromHome: 0,
+        distanceFromResAdd: 0,
       });
       openModal({
-        message: 'Successfully added primary residential address',
+        message: 'Successfully added your residential address',
         type: ModalTypes.SUCCESS,
       });
     } else {
@@ -150,8 +150,8 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
             disabled={
               !addressInfos ||
               (addressInfos &&
-                homeAddress &&
-                addressInfos.formatted_address === homeAddress.address)
+                resAddress &&
+                addressInfos.formatted_address === resAddress.address)
             }
             onClick={saveAddress}
           >
@@ -184,11 +184,11 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
   return (
     <div className='container'>
       <Collapsible
-        title='Update residential address'
+        title='Residential address'
         child={<AddAddressForm />}
-        isCollapsed={isHomeAddress}
+        isCollapsed={isResAddress}
       />
     </div>
   );
 };
-export default AddHomeAddress;
+export default ResidentialAddress;

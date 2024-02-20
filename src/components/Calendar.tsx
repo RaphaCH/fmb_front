@@ -6,7 +6,7 @@ import SplitDayToggle from './CalendarComponents/SplitDayToggle';
 
 type CalendarProps = {
   data: WMonth;
-  homeAddress: Address;
+  resAddress: Address;
   addresses: Address[];
   selectedDate: Date;
   setMonthData: Dispatch<SetStateAction<WMonth>>;
@@ -15,7 +15,7 @@ type CalendarProps = {
 };
 const Calendar = ({
   data,
-  homeAddress,
+  resAddress,
   addresses,
   selectedDate,
   setMonthData,
@@ -58,7 +58,7 @@ const Calendar = ({
       <WorkdayList
         month={data.workdays}
         addresses={addresses}
-        homeAddress={homeAddress}
+        resAddress={resAddress}
         updateDay={updateDay}
         updateMonth={updateMonth}
         isSplitDay={isSplitDay}

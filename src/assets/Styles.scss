@@ -77,6 +77,10 @@ body {
   height: 2.5rem;
   min-height: 2rem;
   margin: 5px auto;
+
+  &.margin-none {
+    margin: 0;
+  }
 }
 .btn-primary {
   color: #fff;
@@ -90,7 +94,7 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  
+
   nav {
     display: flex;
     width: 275px;
@@ -400,13 +404,19 @@ hr {
     margin: 5px auto;
   }
 }
-.registered-client-addresses {
-  > tbody {
-    font-size: 0.875rem;
+.registered-addresses {
+  margin: 10px;
 
-    > tr:not(.editableInput) > td {
-      padding: 29.5px 20px;
-    }
+  .name {
+    width: 220px;
+  }
+
+  .distance {
+    width: 200px;
+  }
+
+  .delete {
+    width: 30px;
   }
 }
 /*.client-list-name,
@@ -494,6 +504,7 @@ p.error-message {
 
 #eligibilityMessage {
   margin: 10px;
+  font-size: 0.85rem;
 }
 
 .checkbox:indeterminate {

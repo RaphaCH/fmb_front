@@ -153,7 +153,7 @@ const Attachments = ({
               alt='Info'
               data-tooltip-id='tooltip-attachment-info'
               data-tooltip-content='Only
-          accepts files in PDF format. Multiple files can be selected at once.'
+          accepts files in PDF format. Multiple files can be selected at once. There is a maximum total size of 600 KB'
             />
           </div>
           <Tooltip id='tooltip-attachment-info' />

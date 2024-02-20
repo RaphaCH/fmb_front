@@ -1,6 +1,6 @@
 export enum StorageTypes {
   USER_NAME = 'userName',
-  HOME_ADDRESS = 'homeAddress',
+  RES_ADDRESS = 'residentialAddress',
   ADDRESSES = 'addresses',
   FILES = 'files',
   WORKDAYS = 'workdays',

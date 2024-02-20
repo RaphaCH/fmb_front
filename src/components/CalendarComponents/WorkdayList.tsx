@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Address, Addresses, WDay } from '../../models/types';
 import { TimeOfDay } from '../../models/enums';
 import DayItem from './DayItem';
@@ -7,7 +7,7 @@ import publicHolidays from '../../hr/public_holidays.json';
 type ListProps = {
   month: WDay[];
   addresses: Addresses;
-  homeAddress: Address;
+  resAddress: Address;
   updateDay: (editedDay: WDay) => void;
   updateMonth: (editedMonth: WDay[]) => void;
   isSplitDay: boolean;
@@ -28,15 +28,22 @@ type WeekData = {
 const WorkdayList = ({
   month,
   addresses,
-  homeAddress,
+  resAddress,
   updateDay,
   updateMonth,
   isSplitDay,
 }: ListProps) => {
-  const isFirstFullWeekFriday = (index: number, day: WDay) => {
-    const hasBeenOneFullWeek: boolean = index > 3 && index < 11;
-    const isFriday: boolean = new Date(day.workDate).getDay() === 5;
-    return hasBeenOneFullWeek && isFriday;
+  const [firstFullWeekIndexes, setFirstFullWeekIndexes] = useState<number[]>(
+    []
+  );
+
+  useEffect(() => {
+    findFirstFullWeek();
+  }, []);
+
+  const findFirstFullWeek = () => {
+    let i = month.findIndex((d) => new Date(d.workDate).getDay() === 1);
+    setFirstFullWeekIndexes([i++, i++, i++, i++, i++]);
   };
 
   const autofillWeeks = (index: number) => {
@@ -75,6 +82,7 @@ const WorkdayList = ({
 
   const Item = ({ day, index }: ItemProps) => {
     const date: Date = new Date(day.workDate);
+    const isWeekend: boolean = date.getDay() % 6 === 0;
     const weekday: string = date.toLocaleDateString('en-gb', {
       weekday: 'short',
     });
@@ -86,7 +94,15 @@ const WorkdayList = ({
 
     return (
       <>
-        <tr className='even:bg-base-100 odd:bg-accent odd:bg-opacity-20'>
+        <tr
+          className={
+            isWeekend
+              ? 'bg-accent'
+              : firstFullWeekIndexes.includes(index)
+              ? 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20 border-x-4 border-primary'
+              : 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20'
+          }
+        >
           <td className='flex !flex-row justify-between cellItem first:bg-accent first:bg-opacity-30'>
             <div>{weekday}</div>
             <div>{formattedDate}</div>
@@ -96,14 +112,14 @@ const WorkdayList = ({
               <DayItem
                 day={day}
                 time={TimeOfDay.AM}
-                defaultWorkplace={homeAddress}
+                defaultWorkplace={resAddress}
                 addresses={addresses}
                 updateDay={updateDay}
               />
               <DayItem
                 day={day}
                 time={TimeOfDay.PM}
-                defaultWorkplace={homeAddress}
+                defaultWorkplace={resAddress}
                 addresses={addresses}
                 updateDay={updateDay}
               />
@@ -112,17 +128,17 @@ const WorkdayList = ({
             <DayItem
               day={day}
               time={TimeOfDay.FULL}
-              defaultWorkplace={homeAddress}
+              defaultWorkplace={resAddress}
               addresses={addresses}
               updateDay={updateDay}
             />
           )}
         </tr>
-        {isFirstFullWeekFriday(index, day) && (
+        {firstFullWeekIndexes[4] === index && (
           <tr className='full-width'>
             <td className='p-0 border-none'>
               <button
-                className='btn btn-primary w-full'
+                className='btn btn-primary w-full rounded-t-none margin-none'
                 onClick={() => autofillWeeks(index)}
               >
                 <span className='mr-3 mb-0.5 text-lg'>{'\u21E9'}</span>Click to
@@ -150,11 +166,11 @@ const WorkdayList = ({
             Afternoon
           </th>
           <th className='bg-primary text-white bg-opacity-70'>Location</th>
-          <th className='bg-primary text-white bg-opacity-70'>Workday</th>
-          <th className='bg-primary text-white bg-opacity-70'>Holiday</th>
+          <th className='bg-primary text-white bg-opacity-70'>Work Day</th>
+          <th className='bg-primary text-white bg-opacity-70'>Absence</th>
           <th className='bg-primary text-white bg-opacity-80'>Location</th>
-          <th className='bg-primary text-white bg-opacity-80'>Workday</th>
-          <th className='bg-primary text-white bg-opacity-80'>Holiday</th>
+          <th className='bg-primary text-white bg-opacity-80'>Work Day</th>
+          <th className='bg-primary text-white bg-opacity-80'>Absence</th>
         </tr>
       </thead>
     );
@@ -168,8 +184,8 @@ const WorkdayList = ({
             Date
           </th>
           <th className='sticky top-0 bg-primary text-white'>Location</th>
-          <th className='sticky top-0 bg-primary text-white'>Workday</th>
-          <th className='sticky top-0 bg-primary text-white'>Holiday</th>
+          <th className='sticky top-0 bg-primary text-white'>Work Day</th>
+          <th className='sticky top-0 bg-primary text-white'>Absence</th>
         </tr>
       </thead>
     );

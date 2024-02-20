@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <header>
       <h2 className='header-title'>
-        FMB: Housing Costs Reimbursement Tool
+        FMB Housing Costs - Proof of Work Location
       </h2>
       <img className='mb-[10px]' src={logo} alt='Accenture Logo' width={120} />
     </header>
