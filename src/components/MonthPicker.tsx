@@ -12,8 +12,9 @@ type CustomButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
 };
 const MonthPicker = ({ selectedDate, updateDate }: Props) => {
-  const minDate: Date = new Date(selectedDate.setMonth(0));
-  const maxDate: Date = new Date(selectedDate.setMonth(11));
+  const currentYear = new Date().getFullYear();
+  const minDate: Date = new Date(currentYear, 0);
+  const maxDate: Date = new Date(currentYear, 11);
 
   const changeMonth = (newDate: Date) => {
     updateDate(newDate);

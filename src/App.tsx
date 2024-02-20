@@ -19,7 +19,7 @@ function App() {
   const { getItem, setItem } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [displayedDate, setDisplayedDate] = useState<Date>(currentDate);
-  const [hasUpdatedDate, setHasUpdatedDate] = useState<boolean>(false);
+  const [hasUpdatedDate, setHasUpdatedDate] = useState<boolean>(true);
   const [addressToDelete, setAddressToDelete] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalDetails, setModalDetails] = useState<ModalDetails>({
@@ -53,8 +53,6 @@ function App() {
     if (hasUpdatedDate) {
       handleWorkdayData();
       setHasUpdatedDate(false);
-    } else if (monthData === undefined) {
-      handleWorkdayData();
     }
   }, [hasUpdatedDate]);
 
@@ -218,6 +216,7 @@ function App() {
   const handleWorkdayData = () => {
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getFullYear();
+
     let month = workdayData?.find(
       (m: WMonth) => m.month === selectedMonth && m.year === selectedYear
     );
