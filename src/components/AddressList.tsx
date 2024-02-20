@@ -45,36 +45,31 @@ const AddressList = ({ addresses, deleteAddress }: ListProps) => {
       </tr>
     );
   };
-  return (
-    <div className='registered-addresses'>
-      <div className='overflow-x-auto radiusTable'>
-        <table className='table w-full'>
-          <thead>
-            <tr>
-              <th className='bg-accent name'>Workplace name</th>
-              <th className='bg-accent'>Address</th>
-              <th className='bg-accent text-center distance'>
-                Distance from residential address
-              </th>
-              <th className='bg-accent delete'></th>
-            </tr>
-          </thead>
-          {addresses.length > 0 ? (
+
+  if (addresses.length > 1) {
+    return (
+      <div className='registered-addresses'>
+        <div className='overflow-x-auto radiusTable'>
+          <table className='table w-full'>
+            <thead>
+              <tr>
+                <th className='bg-accent name'>Workplace name</th>
+                <th className='bg-accent'>Address</th>
+                <th className='bg-accent text-center distance'>
+                  Distance from residential address
+                </th>
+                <th className='bg-accent delete'></th>
+              </tr>
+            </thead>
             <tbody>
               {addresses.slice(1).map((address, index) => (
                 <Item key={index} address={address} />
               ))}
             </tbody>
-          ) : (
-            <tbody>
-              <tr>
-                <td>You must add a residential address</td>
-              </tr>
-            </tbody>
-          )}
-        </table>
+          </table>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 export default AddressList;

@@ -6,18 +6,21 @@ type Props = {
   distance: number | null;
 };
 const EligibilityMessage = ({ mainWorkplace, distance }: Props) => {
+  console.log(mainWorkplace, distance);
   return (
     <div id='eligibilityMessage'>
       {mainWorkplace ? (
         <p>
           Your main work location this month is{' '}
-          <b>{mainWorkplace.addressName}</b>
-          {mainWorkplace.addressName !== 'Residential' ? (
+          {mainWorkplace.addressName !== 'Residential address' ? (
             <span>
-              , which is <b>{distance} km</b> away from your place of residence.
+              <b>{mainWorkplace.addressName}</b>, which is <b>{distance} km</b>{' '}
+              away from your residential address.
             </span>
           ) : (
-            <span>.</span>
+            <span>
+              your <b>residential address</b>.
+            </span>
           )}
         </p>
       ) : (
