@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
-import '../assets/react-datepicker-stylesheets/datepicker-cssmodules.scss';
+import '../assets/react-datepicker-stylesheets/datepicker.scss';
 import calendarIcon from '../assets/icons/calendar_purple.png';
 
 type Props = {

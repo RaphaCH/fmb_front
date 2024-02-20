@@ -17,7 +17,7 @@
   display: inline-block;
   position: relative;
 
-  // Reverting value set in .react-datepicker-popper
+  /* Reverting value set in .react-datepicker-popper */
   line-height: initial;
 }
 
@@ -36,7 +36,7 @@
 .react-datepicker-popper {
   z-index: 1;
 
-  // Eliminating extra space at the bottom of the container
+  /* Eliminating extra space at the bottom of the container */
   line-height: 0;
 
   &[data-placement^='bottom'] {
