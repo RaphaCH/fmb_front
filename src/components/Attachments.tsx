@@ -1,17 +1,17 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
 import { ModalDetails, StoredFile } from '../models/types';
-import { ModalTypes } from '../models/enums';
+import { ModalTypes, StorageTypes } from '../models/enums';
 import trash from '../assets/icons/trash.png';
 import trashPurple from '../assets/icons/trash_purple.png';
 import info from '../assets/icons/info.png';
 import Collapsible from './Collapsible';
+import useLocalStorage from '../utils/useLocalStorage';
 import toBase64 from '../utils/toBase64';
 
 type AttachmentsProps = {
   files: FileList | null;
   setFiles: Dispatch<SetStateAction<FileList | null>>;
-  saveFiles: (files: StoredFile[]) => void;
   deleteFile: (indexToDelete: number) => void;
   openModal: (modalDetails: ModalDetails) => void;
 };
@@ -22,10 +22,11 @@ type FileItemProps = {
 const Attachments = ({
   files,
   setFiles,
-  saveFiles,
   deleteFile,
   openModal,
 }: AttachmentsProps) => {
+  const { setItem } = useLocalStorage();
+
   const addFiles = async (newFiles: FileList | null) => {
     const existingFiles = await files;
     if (!validateSize(newFiles)) {
@@ -48,15 +49,15 @@ const Attachments = ({
       (document.getElementById('uploadedFiles') as HTMLInputElement).files =
         updatedFileList.files;
       setFiles(updatedFileList.files);
-      const toStore = [];
+      const filesToStore = [];
       for (const file of updatedFileList.files) {
         const storageCompatibleFile = {
           name: file.name,
           base64: await toBase64(file),
         };
-        toStore.push(storageCompatibleFile as StoredFile);
+        filesToStore.push(storageCompatibleFile as StoredFile);
       }
-      saveFiles(toStore);
+      setItem(StorageTypes.FILES, filesToStore);
     }
   };
 
@@ -76,14 +77,6 @@ const Attachments = ({
     // console.log(filesSize);
     return filesSize < 4;
   };
-
-  // const toBase64 = (file: File) =>
-  //   new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(file);
-  //     reader.onload = () => resolve(reader.result);
-  //     reader.onerror = reject;
-  //   });
 
   const FileItem = ({ file, index }: FileItemProps) => {
     const [isDeleteHovered, setIsDeleteHovered] = useState<boolean>(false);

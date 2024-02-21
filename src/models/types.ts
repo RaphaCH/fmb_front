@@ -7,6 +7,14 @@ export type Address = {
   distanceFromResAdd: number;
 };
 
+export type ResAddress = {
+  month: number;
+  year: number;
+  address: Address;
+};
+
+export type ResAddresses = ResAddress[];
+
 export type APIAddress = {
   formatted_address: string;
   geometry: APIAddressGeometry;
@@ -22,7 +30,13 @@ export type AddressCoordinates = {
   lng: number;
 };
 
-export type Addresses = Address[];
+export type MonthAddresses = {
+  month: number;
+  year: number;
+  addresses: Address[];
+};
+
+export type AllAddresses = MonthAddresses[];
 
 export type WDay = {
   workDate: string;
@@ -43,12 +57,6 @@ export type WMonth = {
 
 export type Workdays = WMonth[];
 
-export type Option = {
-  key: number;
-  value: string;
-  disabled?: boolean;
-};
-
 export type ModalDetails = {
   message: string;
   type: ModalTypes;
@@ -56,9 +64,17 @@ export type ModalDetails = {
   url?: string;
 };
 
-export type MainWorkplace = {
+export type MonthMainWorkplace = {
+  month: number;
+  year: number;
   address: Address;
-  distance: number;
+};
+
+export type MainWorkplaces = MonthMainWorkplace[];
+
+export type MonthYear = {
+  month: number;
+  year: number;
 };
 
 export type StoredFile = {

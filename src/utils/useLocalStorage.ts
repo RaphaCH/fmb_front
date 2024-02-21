@@ -1,16 +1,22 @@
 import { StorageTypes } from '../models/enums';
-import { Address, MainWorkplace, StoredFile, Workdays } from '../models/types';
+import {
+  AllAddresses,
+  MainWorkplaces,
+  ResAddresses,
+  StoredFile,
+  Workdays,
+} from '../models/types';
 
 const useLocalStorage = () => {
   const setItem = (
     key: string,
     value:
-      | string
-      | Address
-      | Address[]
+      | string // User name
+      | ResAddresses
+      | AllAddresses
       | StoredFile[]
       | Workdays
-      | MainWorkplace
+      | MainWorkplaces
       | null
   ) => {
     try {
@@ -34,7 +40,7 @@ const useLocalStorage = () => {
 
   const getFiles = (item: string) => {
     const array: StoredFile[] = JSON.parse(item);
-    if (array.length > 0) {
+    if (array?.length > 0) {
       const fileList = new DataTransfer();
       array.forEach((f: StoredFile) => {
         const file = dataURLtoFile(f.base64, f.name);

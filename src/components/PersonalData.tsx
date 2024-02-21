@@ -1,21 +1,19 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 
 type Props = {
   userName: string;
-  setUserName: Dispatch<SetStateAction<string>>;
+  handleSaveUserName: (name: string) => void;
 };
-const PersonalData = ({ userName, setUserName }: Props) => {
+const PersonalData = ({ userName, handleSaveUserName }: Props) => {
   return (
     <div className='collapse'>
       <div className='boxTitle'>Full name</div>
       <div className='personalData text-sm'>
         <input
           placeholder='Enter name'
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
+          defaultValue={userName}
+          onBlur={(e) => handleSaveUserName(e.target.value.trim())}
           className='input input-bordered w-full max-w-xs formInput'
-          required
-          autoComplete='off'
         />
       </div>
     </div>

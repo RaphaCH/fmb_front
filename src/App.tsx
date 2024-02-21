@@ -6,7 +6,14 @@ import Attachments from './components/Attachments';
 import WorkplaceAddress from './components/WorkplaceAddress';
 import {
   Address,
+  AllAddresses,
+  MainWorkplaces,
   ModalDetails,
+  MonthAddresses,
+  MonthMainWorkplace,
+  MonthYear,
+  ResAddress,
+  ResAddresses,
   StoredFile,
   WDay,
   WMonth,
@@ -26,8 +33,14 @@ function App() {
   const { getItem, setItem } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [displayedDate, setDisplayedDate] = useState<Date>(currentDate);
+  const [selectedMY, setSelectedMY] = useState<MonthYear>({
+    month: currentDate.getMonth(),
+    year: currentDate.getFullYear(),
+  });
   const [hasUpdatedDate, setHasUpdatedDate] = useState<boolean>(true);
-  const [addressToDelete, setAddressToDelete] = useState<Address>(null);
+  const [addressToDelete, setAddressToDelete] = useState<Address | undefined>(
+    undefined
+  );
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalDetails, setModalDetails] = useState<ModalDetails>({
     message: 'Unknown alert',
@@ -39,52 +52,46 @@ function App() {
   const [files, setFiles] = useState<FileList | null>(
     getItem(StorageTypes.FILES) ?? []
   );
-  const [resAddress, setResAddress] = useState<Address | undefined>(
-    getItem(StorageTypes.RES_ADDRESS) ?? undefined
-  );
-  const [addresses, setAddresses] = useState<Address[]>(
-    getItem(StorageTypes.ADDRESSES) ?? []
-  );
-  const [workdayData, setWorkdayData] = useState<Workdays | undefined>(
-    getItem(StorageTypes.WORKDAYS) ?? []
-  );
+  const [resAddress, setResAddress] = useState<Address | undefined>(undefined);
+  const [addresses, setAddresses] = useState<Address[]>([]);
   const [monthData, setMonthData] = useState<WMonth | undefined>(undefined);
-  const [mainWorkplace, setMainWorkplace] = useState<Address | null>(
-    getItem(StorageTypes.MAINWORKPLACE)?.address ?? null
+  const [mainWorkplace, setMainWorkplace] = useState<Address | undefined>(
+    undefined
   );
-  const [distance, setDistance] = useState<number | null>(
-    getItem(StorageTypes.MAINWORKPLACE)?.distance ?? null
-  );
+  const [distance, setDistance] = useState<number | undefined>(undefined);
+  const [isSplitDay, setIsSplitDay] = useState<boolean>(false);
 
   useEffect(() => {
     if (hasUpdatedDate) {
-      handleWorkdayData();
+      const updatedAddresses: Address[] = handleAddressData();
+      handleResAddressData(updatedAddresses);
+      handleMainWorkplaceData(updatedAddresses);
+      handleWorkdayData(updatedAddresses[0]);
       setHasUpdatedDate(false);
       setDisplayedDate(selectedDate);
     }
   }, [hasUpdatedDate]);
 
+  const handleSaveUserName = (name: string) => {
+    setUserName(name);
+    setItem(StorageTypes.USER_NAME, name);
+  };
+
   const handleSaveData = () => {
+    const updatedMonthWorkdays: WMonth = updateMonthInWorkdays(monthData);
     setItem(StorageTypes.USER_NAME, userName);
-    const updatedWorkdays = updateMonthInWorkdays(monthData);
-    saveWorkdays(updatedWorkdays);
+    storeAllResAddressesWithUpdatedRes(resAddress);
+    storeAllWorkplaceAddressesWithUpdatedAddresses(addresses);
+    storeAllMainWorkplacesWithUpdatedMainWorkplace(mainWorkplace);
+    storeWorkdaysWithUpdatedMonth(updatedMonthWorkdays);
     openModal({
       message: 'Saved',
       type: ModalTypes.SUCCESS,
     });
   };
 
-  const saveWorkdays = (updatedWorkdays: Workdays) => {
-    setItem(StorageTypes.WORKDAYS, updatedWorkdays);
-    setItem(StorageTypes.MAINWORKPLACE, {
-      address: mainWorkplace,
-      distance: distance,
-    });
-    setWorkdayData(updatedWorkdays);
-  };
-
   const addResToWorkdays = (address: Address) => {
-    const updatedWorkdays = monthData.workdays.map((d) => {
+    const updatedWorkdays: WDay[] = monthData.workdays.map((d: WDay) => {
       if (
         d.isWorkdayAm &&
         d.isWorkdayPm &&
@@ -149,13 +156,13 @@ function App() {
 
   const updateWorkdaysByMonth = (updatedMonth: WMonth) => {
     setMonthData(updatedMonth);
-    const updatedWorkdays = updateMonthInWorkdays(updatedMonth);
-    setWorkdayData(updatedWorkdays);
+    storeWorkdaysWithUpdatedMonth(updatedMonth);
     updateMainWorkplace(updatedMonth);
   };
 
   const updateMonthInWorkdays = (updatedMonth: WMonth) => {
-    return workdayData.map((o) =>
+    const storedWorkdays = getItem(StorageTypes.WORKDAYS) ?? [];
+    return storedWorkdays.map((o) =>
       o.month === updatedMonth.month && o.year === updatedMonth.year
         ? monthData
         : o
@@ -212,6 +219,7 @@ function App() {
 
   const handleSaveResAddress = (address: Address) => {
     setResAddress(address);
+    storeAllResAddressesWithUpdatedRes(address);
     let addressList = [address];
     if (addresses.length > 0) {
       let modifiedAddressList = addresses;
@@ -225,16 +233,17 @@ function App() {
         };
       });
       addressList = modifiedAddressList;
+      storeAllResAddressesWithUpdatedRes(address);
     }
     setAddresses(addressList);
-    setItem(StorageTypes.RES_ADDRESS, address);
-    setItem(StorageTypes.ADDRESSES, addressList);
+
+    storeAllWorkplaceAddressesWithUpdatedAddresses(addressList);
     addResToWorkdays(address);
     if (!mainWorkplace) {
-      setItem('mainWorkplace', { address: address, distance: 0 });
+      storeAllMainWorkplacesWithUpdatedMainWorkplace(address);
       setMainWorkplace(address);
       setDistance(0);
-    } else if (mainWorkplace.addressName === 'Res Address') {
+    } else if (mainWorkplace.addressName === 'Residential address') {
       setMainWorkplace(address);
     } else {
       const updatedMainWorkplace = addressList.find(
@@ -245,14 +254,125 @@ function App() {
     }
   };
 
+  const storeAllResAddressesWithUpdatedRes = (address: Address) => {
+    let updatedResAddresses: ResAddresses =
+      getItem(StorageTypes.RES_ADDRESS) ?? [];
+    if (
+      updatedResAddresses?.some(
+        (add: ResAddress) =>
+          add.month === selectedMY.month && add.year === selectedMY.year
+      )
+    ) {
+      updatedResAddresses = updatedResAddresses
+        .map((add: ResAddress) =>
+          add.month === selectedMY.month && add.year === selectedMY.year
+            ? {
+                ...add,
+                address: address,
+              }
+            : add
+        )
+        .sort(sortMonths);
+    } else {
+      updatedResAddresses.push({
+        month: selectedMY.month,
+        year: selectedMY.year,
+        address: address,
+      });
+      updatedResAddresses = updatedResAddresses.sort(sortMonths);
+    }
+    setItem(StorageTypes.RES_ADDRESS, updatedResAddresses);
+  };
+
+  const storeAllWorkplaceAddressesWithUpdatedAddresses = (
+    addressList: Address[]
+  ) => {
+    let updatedAddresses: AllAddresses = getItem(StorageTypes.ADDRESSES) ?? [];
+    if (
+      updatedAddresses?.some(
+        (add: MonthAddresses) =>
+          add.month === selectedMY.month && add.year === selectedMY.year
+      )
+    ) {
+      updatedAddresses = updatedAddresses
+        .map((adds: MonthAddresses) =>
+          adds.month === selectedMY.month && adds.year === selectedMY.year
+            ? {
+                ...adds,
+                addresses: addressList,
+              }
+            : adds
+        )
+        .sort(sortMonths);
+    } else {
+      updatedAddresses.push({
+        month: selectedMY.month,
+        year: selectedMY.year,
+        addresses: addressList,
+      });
+      updatedAddresses = updatedAddresses.sort(sortMonths);
+    }
+    setItem(StorageTypes.ADDRESSES, updatedAddresses);
+  };
+
+  const storeAllMainWorkplacesWithUpdatedMainWorkplace = (
+    mainWorkplace: Address
+  ) => {
+    let updatedMainWorkplaces: MainWorkplaces =
+      getItem(StorageTypes.MAINWORKPLACE) ?? [];
+    if (
+      updatedMainWorkplaces?.some(
+        (add: MonthMainWorkplace) =>
+          add.month === selectedMY.month && add.year === selectedMY.year
+      )
+    ) {
+      updatedMainWorkplaces = updatedMainWorkplaces
+        .map((wp: MonthMainWorkplace) =>
+          wp.month === selectedMY.month && wp.year === selectedMY.year
+            ? {
+                ...wp,
+                address: mainWorkplace,
+              }
+            : wp
+        )
+        .sort(sortMonths);
+    } else {
+      updatedMainWorkplaces.push({
+        month: selectedMY.month,
+        year: selectedMY.year,
+        address: mainWorkplace,
+      });
+      updatedMainWorkplaces = updatedMainWorkplaces.sort(sortMonths);
+    }
+    setItem(StorageTypes.MAINWORKPLACE, updatedMainWorkplaces);
+  };
+
+  const storeWorkdaysWithUpdatedMonth = (updatedMonth: WMonth) => {
+    let updatedWorkdays: Workdays = getItem(StorageTypes.WORKDAYS) ?? [];
+    if (
+      updatedWorkdays?.some(
+        (mon: WMonth) =>
+          mon.month === selectedMY.month && mon.year === selectedMY.year
+      )
+    ) {
+      updatedWorkdays = updatedWorkdays
+        .map((mon: WMonth) =>
+          mon.month === updatedMonth.month && mon.year === updatedMonth.year
+            ? updatedMonth
+            : mon
+        )
+        .sort(sortMonths);
+    } else {
+      updatedWorkdays.push(updatedMonth);
+      updatedWorkdays = updatedWorkdays.sort(sortMonths);
+    }
+    setItem(StorageTypes.WORKDAYS, updatedWorkdays);
+  };
+
   const handleSaveNewAddress = (address: Address) => {
     const updatedAddressList: Address[] = [...addresses, address];
     setAddresses(updatedAddressList);
-    setItem(StorageTypes.ADDRESSES, updatedAddressList);
-  };
-
-  const handleSaveFiles = (files: StoredFile[]) => {
-    setItem(StorageTypes.FILES, files);
+    storeAllWorkplaceAddressesWithUpdatedAddresses(updatedAddressList);
   };
 
   const handleDeleteFile = async (indexToDelete: number) => {
@@ -277,19 +397,79 @@ function App() {
     }
   };
 
-  const handleWorkdayData = () => {
+  const handleWorkdayData = (resAddressForMonth: Address) => {
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getFullYear();
+    const storedWorkdayData = getItem(StorageTypes.WORKDAYS) ?? [];
 
-    let month = workdayData?.find(
+    let month = storedWorkdayData?.find(
       (m: WMonth) => m.month === selectedMonth && m.year === selectedYear
     );
     if (!month) {
-      month = getNewMonth();
-      workdayData.push(month);
-      saveWorkdays(workdayData);
+      month = getNewMonth(resAddressForMonth);
+      storedWorkdayData.push(month);
     }
+    setIsSplitDay(
+      month.workdays.some(
+        (day: WDay) =>
+          day.workPlaceAddressAm?.addressName !==
+          day.workPlaceAddressPm?.addressName
+      )
+    );
     setMonthData(month);
+  };
+
+  const handleAddressData = () => {
+    const allAddresses: AllAddresses = getItem(StorageTypes.ADDRESSES);
+    let newlySelectedMonthAddresses: Address[] = allAddresses?.find(
+      (add: MonthAddresses) =>
+        add.month === selectedMY.month && add.year === selectedMY.year
+    )?.addresses;
+    // If no saved addresses for selected month, retrieve addresses from current month if existing,
+    // else from the latest month (in time) stored
+    if (
+      !newlySelectedMonthAddresses ||
+      newlySelectedMonthAddresses.length < 2
+    ) {
+      if (allAddresses) {
+        newlySelectedMonthAddresses =
+          allAddresses.find(
+            (add: MonthAddresses) =>
+              add.month === currentDate.getMonth() &&
+              add.year === currentDate.getFullYear()
+          )?.addresses ?? allAddresses[allAddresses.length - 1]?.addresses;
+      } else {
+        newlySelectedMonthAddresses = [];
+      }
+    }
+    setAddresses(newlySelectedMonthAddresses);
+    return newlySelectedMonthAddresses;
+  };
+
+  const handleResAddressData = (newlySelectedMonthAddresses: Address[]) => {
+    const newlySelectedResAddress: Address = getItem(
+      StorageTypes.RES_ADDRESS
+    )?.find(
+      (add: ResAddress) =>
+        add.month === selectedMY.month && add.year === selectedMY.year
+    )?.address;
+    const newResAddress: Address =
+      newlySelectedResAddress ?? newlySelectedMonthAddresses[0] ?? undefined;
+    setResAddress(newResAddress);
+  };
+
+  const handleMainWorkplaceData = (newlySelectedMonthAddresses: Address[]) => {
+    const allMainWorkplaces: MainWorkplaces = getItem(
+      StorageTypes.MAINWORKPLACE
+    );
+    const newlySelectedMainWP: Address = allMainWorkplaces?.find(
+      (add: MonthMainWorkplace) =>
+        add.month === selectedMY.month && add.year === selectedMY.year
+    )?.address;
+    const newMainWP: Address =
+      newlySelectedMainWP ?? newlySelectedMonthAddresses[0] ?? undefined;
+    setMainWorkplace(newMainWP);
+    setDistance(newMainWP?.distanceFromResAdd);
   };
 
   const handleDeleteAddress = (address: Address) => {
@@ -318,24 +498,17 @@ function App() {
       (add) => add.addressName !== addressToDelete.addressName
     );
     setAddresses(addressesWithDeleted);
-    setItem(StorageTypes.ADDRESSES, addressesWithDeleted);
+    storeAllWorkplaceAddressesWithUpdatedAddresses(addressesWithDeleted);
     deleteWorkplaceFromWorkdays(addressToDelete);
-    // if (mainWorkplace.addressName === addressToDelete.addressName) {
-    //   updateMainWorkplace();
-    // }
-    // setMonthData(updatedMonth);
-    // const updatedWorkdays = updateMonthInWorkdays(updatedMonth);
-    // setWorkdayData(updatedWorkdays);
-    // updateMainWorkplace();
     cancelAction();
   };
 
   const cancelAction = () => {
-    setAddressToDelete(null);
+    setAddressToDelete(undefined);
     closeModal();
   };
 
-  const getNewMonth = () => {
+  const getNewMonth = (resAddressForMonth: Address) => {
     const month = selectedDate.getMonth();
     const year = selectedDate.getFullYear();
     const date = new Date(year, month, 1);
@@ -349,10 +522,10 @@ function App() {
         [0, 6].indexOf(new Date(formattedDate).getDay()) !== -1;
       days.push({
         workDate: formattedDate,
-        workPlaceAddressAm: isWeekend ? null : resAddress,
+        workPlaceAddressAm: isWeekend ? null : resAddressForMonth,
         isWorkdayAm: !isWeekend,
         isHolidayAm: false,
-        workPlaceAddressPm: isWeekend ? null : resAddress,
+        workPlaceAddressPm: isWeekend ? null : resAddressForMonth,
         isWorkdayPm: !isWeekend,
         isHolidayPm: false,
         isWeekend: isWeekend,
@@ -361,8 +534,15 @@ function App() {
     return { month: month, year: year, workdays: days };
   };
 
+  const sortMonths = (a, b) => {
+    const aDate: Date = new Date(a.year, a.month, 1);
+    const bDate: Date = new Date(b.year, b.month, 1);
+    return Number(aDate) - Number(bDate);
+  };
+
   const handleUpdatedDate = (date: Date) => {
     setSelectedDate(date);
+    setSelectedMY({ month: date.getMonth(), year: date.getFullYear() });
     setHasUpdatedDate(true);
   };
 
@@ -370,11 +550,13 @@ function App() {
     <div className='App'>
       <div>
         <Header />
-        <PersonalData userName={userName} setUserName={setUserName} />
+        <PersonalData
+          userName={userName}
+          handleSaveUserName={handleSaveUserName}
+        />
         <Attachments
           files={files}
           setFiles={setFiles}
-          saveFiles={(files) => handleSaveFiles(files)}
           deleteFile={(indexToDelete) => handleDeleteFile(indexToDelete)}
           openModal={openModal}
         />
@@ -394,6 +576,8 @@ function App() {
             data={monthData}
             resAddress={resAddress}
             addresses={addresses}
+            isSplitDay={isSplitDay}
+            setIsSplitDay={setIsSplitDay}
             displayedDate={displayedDate}
             updateDate={(date: Date) => handleUpdatedDate(date)}
             updateWorkdaysByMonth={(updatedMonth: WMonth) =>
