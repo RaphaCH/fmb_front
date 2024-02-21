@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Address, Addresses, WDay } from '../../models/types';
+import { Address, WDay } from '../../models/types';
 import { TimeOfDay } from '../../models/enums';
 import DayItem from './DayItem';
-import publicHolidays from '../../hr/public_holidays.json';
 
 type ListProps = {
   month: WDay[];
-  addresses: Addresses;
+  addresses: Address[];
   resAddress: Address;
   displayedDate: Date;
   updateDay: (editedDay: WDay) => void;

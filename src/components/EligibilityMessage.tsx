@@ -6,7 +6,6 @@ type Props = {
   distance: number | null;
 };
 const EligibilityMessage = ({ mainWorkplace, distance }: Props) => {
-  console.log(mainWorkplace, distance);
   return (
     <div id='eligibilityMessage'>
       {mainWorkplace ? (

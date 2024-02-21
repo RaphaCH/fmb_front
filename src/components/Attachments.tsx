@@ -1,16 +1,18 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
-import { ModalDetails } from '../models/types';
+import { ModalDetails, StoredFile } from '../models/types';
 import { ModalTypes } from '../models/enums';
 import trash from '../assets/icons/trash.png';
 import trashPurple from '../assets/icons/trash_purple.png';
 import info from '../assets/icons/info.png';
 import Collapsible from './Collapsible';
+import toBase64 from '../utils/toBase64';
 
 type AttachmentsProps = {
   files: FileList | null;
   setFiles: Dispatch<SetStateAction<FileList | null>>;
-  saveFiles: (files) => void;
+  saveFiles: (files: StoredFile[]) => void;
+  deleteFile: (indexToDelete: number) => void;
   openModal: (modalDetails: ModalDetails) => void;
 };
 type FileItemProps = {
@@ -21,6 +23,7 @@ const Attachments = ({
   files,
   setFiles,
   saveFiles,
+  deleteFile,
   openModal,
 }: AttachmentsProps) => {
   const addFiles = async (newFiles: FileList | null) => {
@@ -47,11 +50,11 @@ const Attachments = ({
       setFiles(updatedFileList.files);
       const toStore = [];
       for (const file of updatedFileList.files) {
-        const compatibleFile = {
+        const storageCompatibleFile = {
           name: file.name,
           base64: await toBase64(file),
         };
-        toStore.push(compatibleFile);
+        toStore.push(storageCompatibleFile as StoredFile);
       }
       saveFiles(toStore);
     }
@@ -70,34 +73,17 @@ const Attachments = ({
         filesSize += file.size;
       }
     }
-    console.log(filesSize);
+    // console.log(filesSize);
     return filesSize < 4;
   };
 
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-    });
-
-  const deleteFile = (index: number) => {
-    const uploadedFiles: FileList | null = (
-      document.getElementById('uploadedFiles') as HTMLInputElement
-    ).files;
-    if (uploadedFiles) {
-      const updatedFileList = new DataTransfer();
-      for (let i = 0; i < uploadedFiles.length; i++) {
-        if (index !== i) {
-          updatedFileList.items.add(uploadedFiles[i]);
-        }
-      }
-      (document.getElementById('uploadedFiles') as HTMLInputElement).files =
-        updatedFileList.files;
-      setFiles(updatedFileList.files);
-    }
-  };
+  // const toBase64 = (file: File) =>
+  //   new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(file);
+  //     reader.onload = () => resolve(reader.result);
+  //     reader.onerror = reject;
+  //   });
 
   const FileItem = ({ file, index }: FileItemProps) => {
     const [isDeleteHovered, setIsDeleteHovered] = useState<boolean>(false);

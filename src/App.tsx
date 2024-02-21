@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import publicHolidays from './hr/public_holidays.json';
 import useLocalStorage from './utils/useLocalStorage';
 import PersonalData from './components/PersonalData';
 import Save from './components/Save';
 import Attachments from './components/Attachments';
 import WorkplaceAddress from './components/WorkplaceAddress';
-import { Address, ModalDetails, WDay, WMonth, Workdays } from './models/types';
+import {
+  Address,
+  ModalDetails,
+  StoredFile,
+  WDay,
+  WMonth,
+  Workdays,
+} from './models/types';
 import { ModalTypes, StorageTypes } from './models/enums';
 import AlertModal from './components/AlertModal';
 import Calendar from './components/Calendar';
 import ResidentialAddress from './components/ResidentialAddress';
 import Header from './components/Header';
 import EligibilityMessage from './components/EligibilityMessage';
-import { getDistance } from './utils/GetDistance';
+import getDistance from './utils/getDistance';
+import toBase64 from './utils/toBase64';
 
 function App() {
   const currentDate: Date = new Date();
@@ -20,7 +27,7 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [displayedDate, setDisplayedDate] = useState<Date>(currentDate);
   const [hasUpdatedDate, setHasUpdatedDate] = useState<boolean>(true);
-  const [addressToDelete, setAddressToDelete] = useState<string>('');
+  const [addressToDelete, setAddressToDelete] = useState<Address>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalDetails, setModalDetails] = useState<ModalDetails>({
     message: 'Unknown alert',
@@ -57,10 +64,14 @@ function App() {
     }
   }, [hasUpdatedDate]);
 
-  const saveData = () => {
+  const handleSaveData = () => {
     setItem(StorageTypes.USER_NAME, userName);
     const updatedWorkdays = updateMonthInWorkdays(monthData);
     saveWorkdays(updatedWorkdays);
+    openModal({
+      message: 'Saved',
+      type: ModalTypes.SUCCESS,
+    });
   };
 
   const saveWorkdays = (updatedWorkdays: Workdays) => {
@@ -105,11 +116,42 @@ function App() {
     });
   };
 
+  const deleteWorkplaceFromWorkdays = (workplace: Address) => {
+    const updatedWorkdays = monthData.workdays.map((d) => {
+      if (
+        d.workPlaceAddressAm?.addressName === workplace.addressName &&
+        d.workPlaceAddressPm?.addressName === workplace.addressName
+      ) {
+        return {
+          ...d,
+          workPlaceAddressAm: resAddress,
+          workPlaceAddressPm: resAddress,
+        };
+      } else if (d.workPlaceAddressAm?.addressName === workplace.addressName) {
+        return {
+          ...d,
+          workPlaceAddressAm: resAddress,
+        };
+      } else if (d.workPlaceAddressPm?.addressName === workplace.addressName) {
+        return {
+          ...d,
+          workPlaceAddressPm: resAddress,
+        };
+      }
+      return d;
+    });
+    updateWorkdaysByMonth({
+      month: monthData.month,
+      year: monthData.year,
+      workdays: updatedWorkdays,
+    });
+  };
+
   const updateWorkdaysByMonth = (updatedMonth: WMonth) => {
     setMonthData(updatedMonth);
     const updatedWorkdays = updateMonthInWorkdays(updatedMonth);
     setWorkdayData(updatedWorkdays);
-    updateMainWorkplace();
+    updateMainWorkplace(updatedMonth);
   };
 
   const updateMonthInWorkdays = (updatedMonth: WMonth) => {
@@ -133,8 +175,8 @@ function App() {
     return group;
   };
 
-  const updateMainWorkplace = () => {
-    const groupByLocation = monthData.workdays.reduce(
+  const updateMainWorkplace = (updatedMonthData: WMonth) => {
+    const groupByLocation = updatedMonthData.workdays.reduce(
       (group: {}, product: WDay) => {
         const { workPlaceAddressAm, workPlaceAddressPm } = product;
         group = addWorkPlaceAddress(group, product, workPlaceAddressAm);
@@ -145,13 +187,14 @@ function App() {
     );
     let newDistance = null;
     if (Object.values(groupByLocation).length > 0) {
-      const mainWorkplaceId: string = Object.keys(groupByLocation).reduce(
+      const mainWorkplaceName: string = Object.keys(groupByLocation).reduce(
         (a: string, b: string) =>
           groupByLocation[a] > groupByLocation[b] ? a : b
       );
       const newMainWorkplace =
-        addresses.find((add: Address) => add.addressName === mainWorkplaceId) ??
-        null;
+        addresses.find(
+          (add: Address) => add.addressName === mainWorkplaceName
+        ) ?? null;
       setMainWorkplace(newMainWorkplace);
       if (newMainWorkplace) {
         newDistance = Number(
@@ -166,8 +209,6 @@ function App() {
     }
     setDistance(newDistance);
   };
-
-  const initializeFiles = () => {};
 
   const handleSaveResAddress = (address: Address) => {
     setResAddress(address);
@@ -210,8 +251,30 @@ function App() {
     setItem(StorageTypes.ADDRESSES, updatedAddressList);
   };
 
-  const handleSaveFiles = (files) => {
+  const handleSaveFiles = (files: StoredFile[]) => {
     setItem(StorageTypes.FILES, files);
+  };
+
+  const handleDeleteFile = async (indexToDelete: number) => {
+    const uploadedFiles: FileList = files;
+    if (uploadedFiles) {
+      const updatedFileList = new DataTransfer();
+      for (let i = 0; i < uploadedFiles.length; i++) {
+        if (indexToDelete !== i) {
+          updatedFileList.items.add(uploadedFiles[i]);
+        }
+      }
+      const toStore = [];
+      for (const file of updatedFileList.files) {
+        const storageCompatibleFile = {
+          name: file.name,
+          base64: await toBase64(file),
+        };
+        toStore.push(storageCompatibleFile as StoredFile);
+      }
+      setFiles(updatedFileList.files);
+      setItem(StorageTypes.FILES, toStore);
+    }
   };
 
   const handleWorkdayData = () => {
@@ -234,7 +297,7 @@ function App() {
       message: `Are you sure you want to delete "${address.addressName}"?`,
       type: ModalTypes.CONFIRMATION,
     });
-    setAddressToDelete(address.addressName);
+    setAddressToDelete(address);
     setIsModalOpen(true);
   };
 
@@ -251,16 +314,24 @@ function App() {
   };
 
   const confirmDeleteAction = () => {
-    const addressesWithDeleted = addresses.filter(
-      (add) => add.addressName !== addressToDelete
+    const addressesWithDeleted: Address[] = addresses.filter(
+      (add) => add.addressName !== addressToDelete.addressName
     );
     setAddresses(addressesWithDeleted);
     setItem(StorageTypes.ADDRESSES, addressesWithDeleted);
+    deleteWorkplaceFromWorkdays(addressToDelete);
+    // if (mainWorkplace.addressName === addressToDelete.addressName) {
+    //   updateMainWorkplace();
+    // }
+    // setMonthData(updatedMonth);
+    // const updatedWorkdays = updateMonthInWorkdays(updatedMonth);
+    // setWorkdayData(updatedWorkdays);
+    // updateMainWorkplace();
     cancelAction();
   };
 
   const cancelAction = () => {
-    setAddressToDelete('');
+    setAddressToDelete(null);
     closeModal();
   };
 
@@ -304,6 +375,7 @@ function App() {
           files={files}
           setFiles={setFiles}
           saveFiles={(files) => handleSaveFiles(files)}
+          deleteFile={(indexToDelete) => handleDeleteFile(indexToDelete)}
           openModal={openModal}
         />
         <ResidentialAddress
@@ -331,7 +403,7 @@ function App() {
         )}
         <EligibilityMessage mainWorkplace={mainWorkplace} distance={distance} />
         <Save
-          saveData={saveData}
+          saveData={handleSaveData}
           monthData={monthData}
           userName={userName}
           addresses={addresses}

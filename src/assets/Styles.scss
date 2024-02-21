@@ -69,7 +69,7 @@ body {
 }
 .table th {
   border-radius: 0;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #000;
 }
@@ -351,6 +351,7 @@ hr {
   justify-content: space-between;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 0.875rem;
 
   .btn {
     margin: 20px auto 0 auto;
@@ -419,21 +420,6 @@ hr {
     width: 30px;
   }
 }
-/*.client-list-name,
-.client-list-label,
-.client-list-type {
-  width: 20%;
-}
-.client-list-address {
-  width: 100%;
-}
-.client-list-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-}*/
-
 div.error-space {
   height: 20px;
 }
@@ -445,13 +431,13 @@ p.error-message {
 
 /* Dropdown style */
 
-.input-container {
+/*.input-container {
   .grey-input {
     background-color: var(--lightGray);
 
     &::placeholder {
       color: var(--darkGray);
-      opacity: 1; /* Firefox */
+      opacity: 1;
     }
   }
 
@@ -469,7 +455,7 @@ p.error-message {
       -webkit-transform: rotate(45deg);
     }
   }
-}
+}*/
 
 .collapsible-arrow {
   border: solid var(--corePurple1);
@@ -504,7 +490,7 @@ p.error-message {
 
 #eligibilityMessage {
   margin: 10px;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
 }
 
 .checkbox:indeterminate {
