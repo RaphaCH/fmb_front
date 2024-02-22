@@ -149,11 +149,7 @@ const ResidentialAddress = ({
   };
   return (
     <div className='container'>
-      <Collapsible
-        title='Residential address'
-        child={<AddAddressForm />}
-        isCollapsed={isResAddress}
-      />
+      <Collapsible title='Residential address*' child={<AddAddressForm />} />
     </div>
   );
 };
