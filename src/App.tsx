@@ -55,9 +55,9 @@ function App() {
   const [resAddress, setResAddress] = useState<Address | undefined>(undefined);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [monthData, setMonthData] = useState<WMonth | undefined>(undefined);
-  const [mainWorkplace, setMainWorkplace] = useState<Address | undefined>(
-    undefined
-  );
+  const [mainWorkplace, setMainWorkplace] = useState<
+    Address | undefined | null
+  >(undefined);
   const [distance, setDistance] = useState<number | undefined>(undefined);
   const [isSplitDay, setIsSplitDay] = useState<boolean>(false);
 
@@ -193,16 +193,16 @@ function App() {
       {}
     );
     let newDistance = null;
+    let newMainWorkplace = null;
     if (Object.values(groupByLocation).length > 0) {
       const mainWorkplaceName: string = Object.keys(groupByLocation).reduce(
         (a: string, b: string) =>
           groupByLocation[a] > groupByLocation[b] ? a : b
       );
-      const newMainWorkplace =
+      newMainWorkplace =
         addresses.find(
           (add: Address) => add.addressName === mainWorkplaceName
-        ) ?? null;
-      setMainWorkplace(newMainWorkplace);
+        ) ?? undefined;
       if (newMainWorkplace) {
         newDistance = Number(
           getDistance(
@@ -211,10 +211,10 @@ function App() {
           )
         );
       }
-    } else {
-      setMainWorkplace(null);
     }
+    setMainWorkplace(newMainWorkplace);
     setDistance(newDistance);
+    storeAllMainWorkplacesWithUpdatedMainWorkplace(newMainWorkplace);
   };
 
   const handleSaveResAddress = (address: Address) => {
@@ -256,7 +256,7 @@ function App() {
 
   const storeAllResAddressesWithUpdatedRes = (address: Address) => {
     let updatedResAddresses: ResAddresses =
-      getItem(StorageTypes.RES_ADDRESS) ?? [];
+      getItem(StorageTypes.RES_ADDRESSES) ?? [];
     if (
       updatedResAddresses?.some(
         (add: ResAddress) =>
@@ -281,7 +281,7 @@ function App() {
       });
       updatedResAddresses = updatedResAddresses.sort(sortMonths);
     }
-    setItem(StorageTypes.RES_ADDRESS, updatedResAddresses);
+    setItem(StorageTypes.RES_ADDRESSES, updatedResAddresses);
   };
 
   const storeAllWorkplaceAddressesWithUpdatedAddresses = (
@@ -319,7 +319,7 @@ function App() {
     mainWorkplace: Address
   ) => {
     let updatedMainWorkplaces: MainWorkplaces =
-      getItem(StorageTypes.MAINWORKPLACE) ?? [];
+      getItem(StorageTypes.MAINWORKPLACES) ?? [];
     if (
       updatedMainWorkplaces?.some(
         (add: MonthMainWorkplace) =>
@@ -344,7 +344,7 @@ function App() {
       });
       updatedMainWorkplaces = updatedMainWorkplaces.sort(sortMonths);
     }
-    setItem(StorageTypes.MAINWORKPLACE, updatedMainWorkplaces);
+    setItem(StorageTypes.MAINWORKPLACES, updatedMainWorkplaces);
   };
 
   const storeWorkdaysWithUpdatedMonth = (updatedMonth: WMonth) => {
@@ -448,7 +448,7 @@ function App() {
 
   const handleResAddressData = (newlySelectedMonthAddresses: Address[]) => {
     const newlySelectedResAddress: Address = getItem(
-      StorageTypes.RES_ADDRESS
+      StorageTypes.RES_ADDRESSES
     )?.find(
       (add: ResAddress) =>
         add.month === selectedMY.month && add.year === selectedMY.year
@@ -460,14 +460,16 @@ function App() {
 
   const handleMainWorkplaceData = (newlySelectedMonthAddresses: Address[]) => {
     const allMainWorkplaces: MainWorkplaces = getItem(
-      StorageTypes.MAINWORKPLACE
+      StorageTypes.MAINWORKPLACES
     );
     const newlySelectedMainWP: Address = allMainWorkplaces?.find(
       (add: MonthMainWorkplace) =>
         add.month === selectedMY.month && add.year === selectedMY.year
     )?.address;
     const newMainWP: Address =
-      newlySelectedMainWP ?? newlySelectedMonthAddresses[0] ?? undefined;
+      newlySelectedMainWP === null
+        ? null
+        : newlySelectedMainWP ?? newlySelectedMonthAddresses[0] ?? undefined;
     setMainWorkplace(newMainWP);
     setDistance(newMainWP?.distanceFromResAdd);
   };

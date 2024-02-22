@@ -397,7 +397,7 @@ const SubmitAndExportPDF = ({
         data-tooltip-content={
           !userName
             ? 'Please add your full name'
-            : !mainWorkplace
+            : !addresses[0]
             ? 'Please add your residential address'
             : 'You are not eligible to receive a reimbursement'
         }

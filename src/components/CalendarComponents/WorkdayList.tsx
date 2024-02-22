@@ -140,7 +140,7 @@ const WorkdayList = ({
           <tr className='full-width'>
             <td className='p-0 border-none'>
               <button
-                className='btn btn-primary w-full rounded-t-none margin-none'
+                className='btn btn-primary w-full rounded-t-none margin-none no-animation'
                 onClick={() => autofillWeeks(index)}
               >
                 <span className='mr-3 mb-0.5 text-lg'>{'\u21E9'}</span>Click to
@@ -158,10 +158,10 @@ const WorkdayList = ({
     return (
       <thead>
         <tr className='table-header-grid'>
-          <th className='sticky bg-primary text-white row-span-2 header-date'>
+          <th className='bg-primary text-white row-span-2 header-date'>
             Date
           </th>
-          <th className='sticky bg-primary text-white col-start-2 col-span-3'>
+          <th className='bg-primary text-white col-start-2 col-span-3'>
             Morning
           </th>
           <th className='bg-primary text-white col-start-5 col-span-3'>
@@ -182,12 +182,12 @@ const WorkdayList = ({
     return (
       <thead>
         <tr className='table-header-grid'>
-          <th className='sticky top-0 bg-primary text-white header-date'>
+          <th className='bg-primary text-white header-date'>
             Date
           </th>
-          <th className='sticky top-0 bg-primary text-white'>Location</th>
-          <th className='sticky top-0 bg-primary text-white'>Work Day</th>
-          <th className='sticky top-0 bg-primary text-white'>Absence</th>
+          <th className='bg-primary text-white'>Location</th>
+          <th className='bg-primary text-white'>Work Day</th>
+          <th className='bg-primary text-white'>Absence</th>
         </tr>
       </thead>
     );
@@ -199,8 +199,8 @@ const WorkdayList = ({
         <table
           className={
             isSplitDay
-              ? 'relative w-full wTable split-days'
-              : 'relative w-full wTable non-split-days'
+              ? 'w-full wTable split-days'
+              : 'w-full wTable non-split-days'
           }
         >
           {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}

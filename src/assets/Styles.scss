@@ -206,6 +206,10 @@ hr {
 }
 
 .wTable {
+  th {
+    color: #ffffff;
+  }
+
   tr th {
     border-radius: 0;
     line-height: 28px;
@@ -516,4 +520,8 @@ p.error-message {
   background-color: oklch(0.670171 0.014429 106.783 / 0.2);
   color: oklch(0.2 0 0 / 0.2);
   border: none;
+}
+
+.static {
+  --animation-btn: 0;
 }

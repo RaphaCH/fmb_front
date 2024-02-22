@@ -59,7 +59,7 @@ const WorkdayTypeRadioButtons = ({
             value='workday'
             defaultChecked={day.isWorkdayAm ?? false}
             required={!day.isWeekend}
-            className='checkbox checkbox-primary checkbox-xs'
+            className='checkbox checkbox-primary checkbox-xs no-animation'
             onClick={() => setWorkdayTypeFullDay('workday')}
           />
         </td>
@@ -71,7 +71,7 @@ const WorkdayTypeRadioButtons = ({
               value='holiday'
               defaultChecked={day.isHolidayAm ?? false}
               required={!day.isWeekend}
-              className='checkbox checkbox-primary checkbox-xs'
+              className='checkbox checkbox-primary checkbox-xs no-animation'
               onClick={() => setWorkdayTypeFullDay('holiday')}
             />
           )}
@@ -94,7 +94,7 @@ const WorkdayTypeRadioButtons = ({
             value='workday'
             defaultChecked={day[`isWorkday${time}`] ?? false}
             required={!day.isWeekend}
-            className='checkbox checkbox-primary checkbox-xs'
+            className='checkbox checkbox-primary checkbox-xs no-animation'
             onClick={() => setWorkdayType('workday')}
           />
         </td>
@@ -112,7 +112,7 @@ const WorkdayTypeRadioButtons = ({
               value='holiday'
               defaultChecked={day[`isHoliday${time}`] ?? false}
               required={!day.isWeekend}
-              className='checkbox checkbox-primary checkbox-xs'
+              className='checkbox checkbox-primary checkbox-xs no-animation'
               onClick={() => setWorkdayType('holiday')}
             />
           )}
