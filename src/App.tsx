@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useLocalStorage from './utils/useLocalStorage';
-import PersonalData from './components/PersonalData';
+import UserName from './components/UserName';
 import Save from './components/Save';
 import Attachments from './components/Attachments';
 import WorkplaceAddress from './components/WorkplaceAddress';
@@ -552,10 +552,7 @@ function App() {
     <div className='App'>
       <div>
         <Header />
-        <PersonalData
-          userName={userName}
-          handleSaveUserName={handleSaveUserName}
-        />
+        <UserName userName={userName} handleSaveUserName={handleSaveUserName} />
         <Attachments
           files={files}
           setFiles={setFiles}
