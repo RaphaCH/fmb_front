@@ -52,7 +52,7 @@ const WorkdayTypeRadioButtons = ({
   if (time === TimeOfDay.FULL) {
     return (
       <>
-        <td className='cellItem centered justify-center'>
+        <td className='cellItem'>
           <input
             type='radio'
             name={day.workDate}
@@ -63,7 +63,7 @@ const WorkdayTypeRadioButtons = ({
             onClick={() => setWorkdayTypeFullDay('workday')}
           />
         </td>
-        <td className='cellItem centered justify-center'>
+        <td className='cellItem'>
           {!day.isWeekend && (
             <input
               type='radio'
@@ -84,8 +84,8 @@ const WorkdayTypeRadioButtons = ({
         <td
           className={
             time === TimeOfDay.PM
-              ? 'cellItem centered justify-center even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-              : 'cellItem centered justify-center'
+              ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
+              : 'cellItem'
           }
         >
           <input
@@ -101,8 +101,8 @@ const WorkdayTypeRadioButtons = ({
         <td
           className={
             time === TimeOfDay.PM
-              ? 'cellItem centered justify-center even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-              : 'cellItem centered justify-center'
+              ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
+              : 'cellItem'
           }
         >
           {!day.isWeekend && (

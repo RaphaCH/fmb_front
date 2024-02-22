@@ -105,9 +105,9 @@ const WorkdayList = ({
               : 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20'
           }
         >
-          <td className='cellItem flex justify-between first:bg-accent first:bg-opacity-30'>
-            <div>{weekday}</div>
-            <div>{formattedDate}</div>
+          <td className='cellItem first:bg-accent first:bg-opacity-30'>
+            <div className='absolute left-[10px] text-left'>{weekday}</div>
+            <div className='text-right'>{formattedDate}</div>
           </td>
           {isSplitDay ? (
             <>
@@ -137,8 +137,8 @@ const WorkdayList = ({
           )}
         </tr>
         {firstFullWeekIndexes[4] === index && (
-          <tr className='full-width'>
-            <td className='full-width block p-0 border-none'>
+          <tr>
+            <td className='p-0' colSpan={isSplitDay ? 7 : 4}>
               <button
                 className='btn btn-primary w-full rounded-t-none margin-none no-animation'
                 onClick={() => autofillWeeks(index)}
@@ -157,20 +157,24 @@ const WorkdayList = ({
   const SplitDayHeaders = () => {
     return (
       <thead>
-        <tr className=''>
-          <th className='bg-primary text-white row-span-2 header-date'>Date</th>
-          <th className='bg-primary text-white col-start-2 col-span-3'>
+        <tr>
+          <th className='bg-primary w-1/8' rowSpan={2}>
+            Date
+          </th>
+          <th className='bg-primary' colSpan={3}>
             Morning
           </th>
-          <th className='bg-primary text-white col-start-5 col-span-3'>
+          <th className='bg-primary' colSpan={3}>
             Afternoon
           </th>
-          <th className='bg-primary text-white bg-opacity-70'>Location</th>
-          <th className='bg-primary text-white bg-opacity-70'>Work Day</th>
-          <th className='bg-primary text-white bg-opacity-70'>Absence</th>
-          <th className='bg-primary text-white bg-opacity-80'>Location</th>
-          <th className='bg-primary text-white bg-opacity-80'>Work Day</th>
-          <th className='bg-primary text-white bg-opacity-80'>Absence</th>
+        </tr>
+        <tr>
+          <th className='light-purple'>Location</th>
+          <th className='light-purple'>Work Day</th>
+          <th className='light-purple'>Absence</th>
+          <th className='medium-purple'>Location</th>
+          <th className='medium-purple'>Work Day</th>
+          <th className='medium-purple'>Absence</th>
         </tr>
       </thead>
     );
@@ -180,10 +184,10 @@ const WorkdayList = ({
     return (
       <thead>
         <tr className='table-header-grid'>
-          <th className='bg-primary text-white header-date'>Date</th>
-          <th className='bg-primary text-white'>Location</th>
-          <th className='bg-primary text-white'>Work Day</th>
-          <th className='bg-primary text-white'>Absence</th>
+          <th className='bg-primary w-1/5'>Date</th>
+          <th className='bg-primary'>Location</th>
+          <th className='bg-primary'>Work Day</th>
+          <th className='bg-primary'>Absence</th>
         </tr>
       </thead>
     );
@@ -191,13 +195,7 @@ const WorkdayList = ({
 
   return (
     <div>
-      <table
-        className={
-          isSplitDay
-            ? 'table table-pin-rows w-full wTable split-days'
-            : 'table table-pin-rows w-full wTable non-split-days'
-        }
-      >
+      <table className='table w-full wTable table-fixed'>
         {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
         <tbody>
           {month.map((day, index) => (
