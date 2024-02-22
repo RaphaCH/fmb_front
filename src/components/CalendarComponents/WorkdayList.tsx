@@ -105,7 +105,7 @@ const WorkdayList = ({
               : 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20'
           }
         >
-          <td className='flex !flex-row justify-between cellItem first:bg-accent first:bg-opacity-30'>
+          <td className='cellItem flex justify-between first:bg-accent first:bg-opacity-30'>
             <div>{weekday}</div>
             <div>{formattedDate}</div>
           </td>
@@ -138,7 +138,7 @@ const WorkdayList = ({
         </tr>
         {firstFullWeekIndexes[4] === index && (
           <tr className='full-width'>
-            <td className='p-0 border-none'>
+            <td className='full-width block p-0 border-none'>
               <button
                 className='btn btn-primary w-full rounded-t-none margin-none no-animation'
                 onClick={() => autofillWeeks(index)}
@@ -157,10 +157,8 @@ const WorkdayList = ({
   const SplitDayHeaders = () => {
     return (
       <thead>
-        <tr className='table-header-grid'>
-          <th className='bg-primary text-white row-span-2 header-date'>
-            Date
-          </th>
+        <tr className=''>
+          <th className='bg-primary text-white row-span-2 header-date'>Date</th>
           <th className='bg-primary text-white col-start-2 col-span-3'>
             Morning
           </th>
@@ -182,9 +180,7 @@ const WorkdayList = ({
     return (
       <thead>
         <tr className='table-header-grid'>
-          <th className='bg-primary text-white header-date'>
-            Date
-          </th>
+          <th className='bg-primary text-white header-date'>Date</th>
           <th className='bg-primary text-white'>Location</th>
           <th className='bg-primary text-white'>Work Day</th>
           <th className='bg-primary text-white'>Absence</th>
@@ -194,23 +190,21 @@ const WorkdayList = ({
   };
 
   return (
-    <div className='formContainer'>
-      <div>
-        <table
-          className={
-            isSplitDay
-              ? 'w-full wTable split-days'
-              : 'w-full wTable non-split-days'
-          }
-        >
-          {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
-          <tbody className='itemContainer'>
-            {month.map((day, index) => (
-              <Item key={index} day={day} index={index} />
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div>
+      <table
+        className={
+          isSplitDay
+            ? 'table table-pin-rows w-full wTable split-days'
+            : 'table table-pin-rows w-full wTable non-split-days'
+        }
+      >
+        {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
+        <tbody>
+          {month.map((day, index) => (
+            <Item key={index} day={day} index={index} />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

@@ -217,7 +217,7 @@ hr {
     text-align: center;
   }
 
-  tr {
+  /*tr {
     display: grid;
     height: 100%;
     font-size: 0.875rem;
@@ -229,7 +229,7 @@ hr {
 
   &.non-split-days tr:not(.full-width) {
     grid-template-columns: 200px 1fr 1fr 1fr;
-  }
+  }*/
 }
 
 .table-header-grid {
@@ -240,22 +240,22 @@ hr {
     text-align: center;
     vertical-align: bottom;
 
-    &.header-date {
+    /*&.header-date {
       display: flex;
       justify-content: center;
       align-items: center;
-    }
+    }*/
   }
 }
-.itemContainer {
+/*.itemContainer {
   display: flex;
   flex-direction: column;
-}
+}*/
 .cellItem {
   border: none;
-  display: flex;
+  /*display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: center;*/
   line-height: 28px;
   height: 100%;
   background-color: inherit;
