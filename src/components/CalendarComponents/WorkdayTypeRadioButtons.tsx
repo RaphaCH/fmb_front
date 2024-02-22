@@ -52,18 +52,18 @@ const WorkdayTypeRadioButtons = ({
   if (time === TimeOfDay.FULL) {
     return (
       <>
-        <td className='cellItem centered justify-center'>
+        <td className='cellItem'>
           <input
             type='radio'
             name={day.workDate}
             value='workday'
             defaultChecked={day.isWorkdayAm ?? false}
             required={!day.isWeekend}
-            className='checkbox checkbox-primary checkbox-xs'
+            className='checkbox checkbox-primary checkbox-xs no-animation'
             onClick={() => setWorkdayTypeFullDay('workday')}
           />
         </td>
-        <td className='cellItem centered justify-center'>
+        <td className='cellItem'>
           {!day.isWeekend && (
             <input
               type='radio'
@@ -71,7 +71,7 @@ const WorkdayTypeRadioButtons = ({
               value='holiday'
               defaultChecked={day.isHolidayAm ?? false}
               required={!day.isWeekend}
-              className='checkbox checkbox-primary checkbox-xs'
+              className='checkbox checkbox-primary checkbox-xs no-animation'
               onClick={() => setWorkdayTypeFullDay('holiday')}
             />
           )}
@@ -84,8 +84,8 @@ const WorkdayTypeRadioButtons = ({
         <td
           className={
             time === TimeOfDay.PM
-              ? 'cellItem centered justify-center even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-              : 'cellItem centered justify-center'
+              ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
+              : 'cellItem'
           }
         >
           <input
@@ -94,15 +94,15 @@ const WorkdayTypeRadioButtons = ({
             value='workday'
             defaultChecked={day[`isWorkday${time}`] ?? false}
             required={!day.isWeekend}
-            className='checkbox checkbox-primary checkbox-xs'
+            className='checkbox checkbox-primary checkbox-xs no-animation'
             onClick={() => setWorkdayType('workday')}
           />
         </td>
         <td
           className={
             time === TimeOfDay.PM
-              ? 'cellItem centered justify-center even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-              : 'cellItem centered justify-center'
+              ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
+              : 'cellItem'
           }
         >
           {!day.isWeekend && (
@@ -112,7 +112,7 @@ const WorkdayTypeRadioButtons = ({
               value='holiday'
               defaultChecked={day[`isHoliday${time}`] ?? false}
               required={!day.isWeekend}
-              className='checkbox checkbox-primary checkbox-xs'
+              className='checkbox checkbox-primary checkbox-xs no-animation'
               onClick={() => setWorkdayType('holiday')}
             />
           )}

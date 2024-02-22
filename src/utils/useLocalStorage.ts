@@ -1,16 +1,22 @@
 import { StorageTypes } from '../models/enums';
-import { Address, MainWorkplace, Workdays } from '../models/types';
+import {
+  AllAddresses,
+  MainWorkplaces,
+  ResAddresses,
+  StoredFile,
+  Workdays,
+} from '../models/types';
 
 const useLocalStorage = () => {
   const setItem = (
     key: string,
     value:
-      | string
-      | Address
-      | Address[]
-      | FileList
+      | string // User name
+      | ResAddresses
+      | AllAddresses
+      | StoredFile[]
       | Workdays
-      | MainWorkplace
+      | MainWorkplaces
       | null
   ) => {
     try {
@@ -20,29 +26,26 @@ const useLocalStorage = () => {
     }
   };
 
-  const getFiles = async (item: string) => {
-    const array = JSON.parse(item);
-    if (array) {
-      const fileList = new DataTransfer();
-      await array.forEach(async (f) => {
-        const res: Response = await fetch(f.base64);
-        const blob: Blob = await res.blob();
-        const file = new File([blob], f.name, { type: 'application/pdf' });
-        fileList.items.add(file);
-        // fetch(f.base64)
-        //   .then((res) => res.blob())
-        //   .then((blob) => {
-        //     const file = new File([blob], f.name, {
-        //       type: "application/pdf",
-        //     });
-        //     console.log(file);
-        //     fileList.items.add(file);
-        //   });
-        // const file = new File([f.base64], f.name, {
-        //   type: "application/pdf",
-        // });
-      });
+  const dataURLtoFile = (dataurl, filename) => {
+    const arr = dataurl.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[arr.length - 1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, { type: mime });
+  };
 
+  const getFiles = (item: string) => {
+    const array: StoredFile[] = JSON.parse(item);
+    if (array?.length > 0) {
+      const fileList = new DataTransfer();
+      array.forEach((f: StoredFile) => {
+        const file = dataURLtoFile(f.base64, f.name);
+        fileList.items.add(file);
+      });
       return fileList.files;
     }
     return null;

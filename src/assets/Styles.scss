@@ -69,7 +69,7 @@ body {
 }
 .table th {
   border-radius: 0;
-  font-size: 0.85rem;
+  font-size: 0.875rem;
   font-weight: 600;
   color: #000;
 }
@@ -77,6 +77,10 @@ body {
   height: 2.5rem;
   min-height: 2rem;
   margin: 5px auto;
+
+  &.margin-none {
+    margin: 0;
+  }
 }
 .btn-primary {
   color: #fff;
@@ -90,7 +94,7 @@ header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  
+
   nav {
     display: flex;
     width: 275px;
@@ -137,7 +141,7 @@ hr {
   border: none;
   background-color: transparent;
 }
-.personalData,
+.user-name,
 .attachments {
   padding: 0 0 20px 20px;
 }
@@ -202,56 +206,42 @@ hr {
 }
 
 .wTable {
-  tr th {
-    border-radius: 0;
-    line-height: 28px;
-    width: 100%;
-    text-align: center;
+  thead {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  th {
+    color: #ffffff;
+  }
+
+  th.light-purple {
+    background-color: #9e4cd2;
+  }
+
+  th.medium-purple {
+    background-color: #9133cd;
   }
 
   tr {
-    display: grid;
-    height: 100%;
-    font-size: 0.875rem;
+    border: none;
   }
 
-  &.split-days tr:not(.full-width) {
-    grid-template-columns: 160px 260px 1fr 1fr 260px 1fr 1fr;
-  }
-
-  &.non-split-days tr:not(.full-width) {
-    grid-template-columns: 200px 1fr 1fr 1fr;
-  }
-}
-
-.table-header-grid {
-  th {
-    display: table-cell;
-    width: 100%;
-    height: 100%;
+  tr th {
+    border-radius: 0;
+    line-height: 28px;
     text-align: center;
-    vertical-align: bottom;
-
-    &.header-date {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
   }
 }
-.itemContainer {
-  display: flex;
-  flex-direction: column;
-}
+
 .cellItem {
   border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   line-height: 28px;
   height: 100%;
   background-color: inherit;
   padding: 10px;
+  text-align: center;
 }
 .collapse {
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.2);
@@ -347,6 +337,7 @@ hr {
   justify-content: space-between;
   margin-top: 10px;
   margin-bottom: 10px;
+  font-size: 0.875rem;
 
   .btn {
     margin: 20px auto 0 auto;
@@ -400,30 +391,21 @@ hr {
     margin: 5px auto;
   }
 }
-.registered-client-addresses {
-  > tbody {
-    font-size: 0.875rem;
+.registered-addresses {
+  margin: 10px;
 
-    > tr:not(.editableInput) > td {
-      padding: 29.5px 20px;
-    }
+  .name {
+    width: 220px;
+  }
+
+  .distance {
+    width: 200px;
+  }
+
+  .delete {
+    width: 30px;
   }
 }
-/*.client-list-name,
-.client-list-label,
-.client-list-type {
-  width: 20%;
-}
-.client-list-address {
-  width: 100%;
-}
-.client-list-actions {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-}*/
-
 div.error-space {
   height: 20px;
 }
@@ -435,13 +417,13 @@ p.error-message {
 
 /* Dropdown style */
 
-.input-container {
+/*.input-container {
   .grey-input {
     background-color: var(--lightGray);
 
     &::placeholder {
       color: var(--darkGray);
-      opacity: 1; /* Firefox */
+      opacity: 1;
     }
   }
 
@@ -459,7 +441,7 @@ p.error-message {
       -webkit-transform: rotate(45deg);
     }
   }
-}
+}*/
 
 .collapsible-arrow {
   border: solid var(--corePurple1);
@@ -494,6 +476,7 @@ p.error-message {
 
 #eligibilityMessage {
   margin: 10px;
+  font-size: 0.875rem;
 }
 
 .checkbox:indeterminate {
@@ -519,4 +502,8 @@ p.error-message {
   background-color: oklch(0.670171 0.014429 106.783 / 0.2);
   color: oklch(0.2 0 0 / 0.2);
   border: none;
+}
+
+.static {
+  --animation-btn: 0;
 }

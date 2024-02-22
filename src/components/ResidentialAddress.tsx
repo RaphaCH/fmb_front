@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Collapsible from './Collapsible';
 import Maps from './Maps';
 import { ModalTypes } from '../models/enums';
@@ -7,23 +7,30 @@ import GetCoordinates from '../axios/GetCoordinates';
 import location from '../assets/icons/location.png';
 
 type Props = {
-  homeAddress: Address;
-  saveHomeAddress: (address: Address) => void;
+  resAddress: Address;
+  saveResAddress: (address: Address) => void;
   openModal: (modalDetails: ModalDetails) => void;
 };
-const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
+const ResidentialAddress = ({
+  resAddress,
+  saveResAddress,
+  openModal,
+}: Props) => {
   const [addressInfos, setAddressInfos] = useState<undefined | APIAddress>(
-    homeAddress
-      ? {
-          formatted_address: homeAddress.address,
-          geometry: { location: homeAddress.addressCoordinates },
-          inputValueAddress: homeAddress.address,
-        }
-      : undefined
+    undefined
   );
-  const isHomeAddress = homeAddress !== undefined;
+  const isResAddress = resAddress !== undefined;
   const inputRef = useRef<HTMLInputElement>();
-  // inputRef.current.value = homeAddress.address ?? "";
+
+  useEffect(() => {
+    if (resAddress) {
+      setAddressInfos({
+        formatted_address: resAddress.address,
+        geometry: { location: resAddress.addressCoordinates },
+        inputValueAddress: resAddress.address,
+      });
+    }
+  }, [resAddress]);
 
   /**
    * Verifies whether or not the address is valid
@@ -50,35 +57,6 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
     }
   };
 
-  // /**
-  //  * Adds a new residential address to an employee
-  //  * @param address - The address to be added
-  //  * @returns - True if the address was successfully added to the database, else false
-  //  */
-  // const addResidentialAddress = async (address: Address) => {
-  //   const promise = new Promise((resolve) => {
-  //     PostNewAddress(address).then((response) => {
-  //       if (response.status === 201) {
-  //         AddAddressToEmployee(employeeNumber, response.data.id).then(
-  //           (response) => {
-  //             if (response.status === 200) {
-  //               setForceUserUpdate(true);
-  //               resolve(true);
-  //             } else {
-  //               openModal({
-  //                 message: response.data.error,
-  //                 type: ModalTypes.ERROR,
-  //               });
-  //               resolve(false);
-  //             }
-  //           }
-  //         );
-  //       }
-  //     });
-  //   });
-  //   return Boolean(await promise);
-  // };
-
   /**
    * Handles the information entered when submitting a new address
    * and adds the address to the database if the information is valid.
@@ -86,14 +64,14 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
    */
   const saveAddress = () => {
     if (addressInfos) {
-      saveHomeAddress({
-        addressName: 'Home',
+      saveResAddress({
+        addressName: 'Residential address',
         address: addressInfos.formatted_address,
         addressCoordinates: addressInfos.geometry.location,
-        distanceFromHome: 0,
+        distanceFromResAdd: 0,
       });
       openModal({
-        message: 'Successfully added primary residential address',
+        message: 'Successfully added your residential address',
         type: ModalTypes.SUCCESS,
       });
     } else {
@@ -103,18 +81,6 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
       });
     }
   };
-
-  // /**
-  //  * Validates the value in an input field
-  //  * @param value - The input field string value to be validated
-  //  */
-  // const validateField = (value: string) => {
-  //   if (value === "") {
-  //     setIsValidForm(false);
-  //   } else {
-  //     setIsValidForm(true);
-  //   }
-  // };
 
   const AddAddressForm = () => {
     return (
@@ -150,8 +116,8 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
             disabled={
               !addressInfos ||
               (addressInfos &&
-                homeAddress &&
-                addressInfos.formatted_address === homeAddress.address)
+                resAddress &&
+                addressInfos.formatted_address === resAddress.address)
             }
             onClick={saveAddress}
           >
@@ -173,8 +139,8 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
         <div className='clientMapContainer'>
           {addressInfos && (
             <Maps
-              lat={addressInfos?.geometry?.location.lat}
-              lng={addressInfos?.geometry?.location.lng}
+              lat={addressInfos?.geometry?.location?.lat}
+              lng={addressInfos?.geometry?.location?.lng}
             />
           )}
         </div>
@@ -183,12 +149,8 @@ const AddHomeAddress = ({ homeAddress, saveHomeAddress, openModal }: Props) => {
   };
   return (
     <div className='container'>
-      <Collapsible
-        title='Update residential address'
-        child={<AddAddressForm />}
-        isCollapsed={isHomeAddress}
-      />
+      <Collapsible title='Residential address*' child={<AddAddressForm />} />
     </div>
   );
 };
-export default AddHomeAddress;
+export default ResidentialAddress;

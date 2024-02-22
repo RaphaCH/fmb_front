@@ -1,41 +1,38 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { Address, WDay, WMonth } from '../models/types';
 import WorkdayList from './CalendarComponents/WorkdayList';
-import MonthPicker from "./MonthPicker";
+import MonthPicker from './MonthPicker';
 import SplitDayToggle from './CalendarComponents/SplitDayToggle';
 
 type CalendarProps = {
   data: WMonth;
-  homeAddress: Address;
+  resAddress: Address;
   addresses: Address[];
-  selectedDate: Date;
-  setMonthData: Dispatch<SetStateAction<WMonth>>;
+  isSplitDay: boolean;
+  setIsSplitDay: Dispatch<SetStateAction<boolean>>;
+  displayedDate: Date;
   updateDate: (date: Date) => void;
   updateWorkdaysByMonth: (updatedMonth: WMonth) => void;
 };
 const Calendar = ({
   data,
-  homeAddress,
+  resAddress,
   addresses,
-  selectedDate,
-  setMonthData,
+  isSplitDay,
+  setIsSplitDay,
+  displayedDate,
   updateDate,
   updateWorkdaysByMonth,
 }: CalendarProps) => {
-  const [isSplitDay, setIsSplitDay] = useState<boolean>(
-    data.workdays.some(
-      (day: WDay) =>
-        day.workPlaceAddressAm?.addressName !==
-        day.workPlaceAddressPm?.addressName
-    )
-  );
-
   const updateDay = (editedDay: WDay) => {
-    let day = data.workdays.find(
-      (day: WDay) => day.workDate === editedDay.workDate
+    const updatedDays: WDay[] = data.workdays.map((day: WDay) =>
+      day.workDate === editedDay.workDate ? editedDay : day
     );
-    day = editedDay;
-    updateWorkdaysByMonth(data);
+    updateWorkdaysByMonth({
+      month: data.month,
+      year: data.year,
+      workdays: updatedDays,
+    });
   };
 
   const updateMonth = (editedMonth: WDay[]) => {
@@ -53,12 +50,13 @@ const Calendar = ({
           month={data.workdays}
           updateMonth={updateMonth}
         />
-        <MonthPicker updateDate={updateDate} selectedDate={selectedDate} />
+        <MonthPicker updateDate={updateDate} displayedDate={displayedDate} />
       </div>
       <WorkdayList
         month={data.workdays}
         addresses={addresses}
-        homeAddress={homeAddress}
+        resAddress={resAddress}
+        displayedDate={displayedDate}
         updateDay={updateDay}
         updateMonth={updateMonth}
         isSplitDay={isSplitDay}

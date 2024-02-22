@@ -1,6 +1,6 @@
 import { AddressCoordinates } from '../models/types';
 
-export const getDistance = (
+const getDistance = (
   latlngFrom: AddressCoordinates,
   latlngTo: AddressCoordinates
 ) => {
@@ -24,3 +24,5 @@ export const getDistance = (
   const distance = radius * c; // Distance in km
   return distance.toFixed(2);
 };
+
+export default getDistance;

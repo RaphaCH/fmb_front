@@ -1,16 +1,18 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import { Tooltip } from 'react-tooltip';
-import { ModalDetails } from '../models/types';
-import { ModalTypes } from '../models/enums';
+import { ModalDetails, StoredFile } from '../models/types';
+import { ModalTypes, StorageTypes } from '../models/enums';
 import trash from '../assets/icons/trash.png';
 import trashPurple from '../assets/icons/trash_purple.png';
 import info from '../assets/icons/info.png';
 import Collapsible from './Collapsible';
+import useLocalStorage from '../utils/useLocalStorage';
+import toBase64 from '../utils/toBase64';
 
 type AttachmentsProps = {
   files: FileList | null;
   setFiles: Dispatch<SetStateAction<FileList | null>>;
-  saveFiles: (files) => void;
+  deleteFile: (indexToDelete: number) => void;
   openModal: (modalDetails: ModalDetails) => void;
 };
 type FileItemProps = {
@@ -20,17 +22,14 @@ type FileItemProps = {
 const Attachments = ({
   files,
   setFiles,
-  saveFiles,
+  deleteFile,
   openModal,
 }: AttachmentsProps) => {
+  const { setItem } = useLocalStorage();
+
   const addFiles = async (newFiles: FileList | null) => {
     const existingFiles = await files;
-    if (!validateSize(newFiles)) {
-      openModal({
-        message: 'Your file sizes are too large',
-        type: ModalTypes.ERROR,
-      });
-    } else {
+    if (validateSize(newFiles)) {
       const updatedFileList = new DataTransfer();
       if (existingFiles) {
         for (const file of existingFiles) {
@@ -45,58 +44,53 @@ const Attachments = ({
       (document.getElementById('uploadedFiles') as HTMLInputElement).files =
         updatedFileList.files;
       setFiles(updatedFileList.files);
-      const toStore = [];
+      const filesToStore = [];
       for (const file of updatedFileList.files) {
-        const compatibleFile = {
+        const storageCompatibleFile = {
           name: file.name,
           base64: await toBase64(file),
         };
-        toStore.push(compatibleFile);
+        filesToStore.push(storageCompatibleFile as StoredFile);
       }
-      saveFiles(toStore);
+      setItem(StorageTypes.FILES, filesToStore);
     }
   };
 
-  const validateSize = async (newFiles: FileList | null) => {
-    const existingFiles = await files;
-    let filesSize = 0;
+  const validateSize = (newFiles: FileList | null) => {
+    const existingFiles = files;
+    let count = 0;
+    let existingFilesSize = 0;
+    let newFilesSize = 0;
     if (existingFiles) {
       for (const file of existingFiles) {
-        filesSize += file.size;
+        existingFilesSize += Math.floor(file.size / 1000); // Add each file's size in KB
+        count++;
       }
     }
     if (newFiles) {
       for (const file of newFiles) {
-        filesSize += file.size;
+        newFilesSize += Math.floor(file.size / 1000); // Add each file's size in KB
+        count++;
       }
     }
-    console.log(filesSize);
-    return filesSize < 4;
-  };
-
-  const toBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = reject;
-    });
-
-  const deleteFile = (index: number) => {
-    const uploadedFiles: FileList | null = (
-      document.getElementById('uploadedFiles') as HTMLInputElement
-    ).files;
-    if (uploadedFiles) {
-      const updatedFileList = new DataTransfer();
-      for (let i = 0; i < uploadedFiles.length; i++) {
-        if (index !== i) {
-          updatedFileList.items.add(uploadedFiles[i]);
-        }
-      }
-      (document.getElementById('uploadedFiles') as HTMLInputElement).files =
-        updatedFileList.files;
-      setFiles(updatedFileList.files);
+    if (count > 3) {
+      openModal({
+        message: 'Only three files can be uploaded at one time.',
+        type: ModalTypes.ERROR,
+      });
+      return false;
+    } else if (existingFilesSize + newFilesSize > 4000) {
+      openModal({
+        message: `Your file sizes are too large.\nOnly ${
+          4000 - existingFilesSize
+        } KB is remaining.`,
+        type: ModalTypes.ERROR,
+      });
+      return false;
     }
+
+    // File size upload limit on the mobility platform is 8MB (8000KB)
+    return true;
   };
 
   const FileItem = ({ file, index }: FileItemProps) => {
@@ -153,16 +147,29 @@ const Attachments = ({
               alt='Info'
               data-tooltip-id='tooltip-attachment-info'
               data-tooltip-content='Only
-          accepts files in PDF format. Multiple files can be selected at once.'
+          accepts files in PDF format. Multiple files can be selected at once. A maximum of three files can be added with a maximum total size of 4MB'
             />
           </div>
           <Tooltip id='tooltip-attachment-info' />
-          <label
-            htmlFor='uploadedFiles'
-            className='btn btn-primary btn-outline'
+          <div
+            className='w-fit'
+            data-tooltip-id='tooltip-disabled'
+            data-tooltip-content={
+              'Only three files can be uploaded at one time'
+            }
           >
-            Choose files
-          </label>
+            <label
+              htmlFor='uploadedFiles'
+              className={
+                files.length > 2
+                  ? 'btn btn-disabled btn-primary'
+                  : 'btn btn-primary btn-outline'
+              }
+            >
+              Choose files
+            </label>
+          </div>
+          {files.length > 2 && <Tooltip id='tooltip-disabled' />}
           <input
             type='file'
             id='uploadedFiles'

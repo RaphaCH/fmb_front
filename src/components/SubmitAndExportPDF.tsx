@@ -57,10 +57,10 @@ const SubmitAndExportPDF = ({
    */
   const getOpeningText = (month: string) => {
     let mainWorkplaceText = '';
-    if (mainWorkplace.addressName === 'Home') {
-      mainWorkplaceText = `The main workplace in ${month} ${data.year} was ${mainWorkplace.addressName}, the official place of residence.`;
+    if (mainWorkplace.addressName === 'Residential address') {
+      mainWorkplaceText = `I acknowledge that the information below is correct and aligned with the information submitted in myTE. The main workplace in ${month} ${data.year} was the residential address.`;
     } else {
-      mainWorkplaceText = `The main workplace in ${month} ${data.year} was ${mainWorkplace.addressName}, which is ${distance} km away from the residential address.`;
+      mainWorkplaceText = `I acknowledge that the information below is correct and aligned with the information submitted in myTE. The main workplace in ${month} ${data.year} was ${mainWorkplace.addressName}, which is ${distance} km away from the residential address.`;
     }
     return `Date: ${new Date().toLocaleDateString('en-gb', {
       day: '2-digit',
@@ -189,20 +189,20 @@ const SubmitAndExportPDF = ({
 
   const getCellStyle = (data) => {
     if (
-      data.cell.raw === 'WE / PH' ||
+      data.cell.raw === 'Weekend' ||
       data.cell.raw.startsWith('Sat') ||
       data.cell.raw.startsWith('Sun')
     ) {
       data.cell.styles.fillColor = '#DFDFDF';
-      if (data.cell.raw === 'WE / PH') {
+      if (data.cell.raw === 'Weekend') {
         data.cell.styles.textColor = '#878787';
         data.cell.styles.fontStyle = 'italic';
       }
-    } else if (data.cell.raw === 'PTO') {
+    } else if (data.cell.raw === 'Absence') {
       data.cell.styles.fillColor = '#F3F3F3';
       data.cell.styles.textColor = '#878787';
       data.cell.styles.fontStyle = 'italic';
-      // If the cell contains a location
+      // If the cell contains a location, so styling remains unchanged
     } else if (data.cell.styles.cellWidth === 'auto') {
       data.cell.styles.fontStyle = 'bold';
     }
@@ -213,10 +213,10 @@ const SubmitAndExportPDF = ({
       return day[`workPlaceAddress${time}`]?.addressName;
     }
     if (day.isWeekend) {
-      return 'WE / PH';
+      return 'Weekend';
     }
     // If neither work day or weekend, return 'paid time off' abbreviation,
-    return 'PTO';
+    return 'Absence';
   };
 
   /**
@@ -224,7 +224,7 @@ const SubmitAndExportPDF = ({
    */
   const generatePDF = async () => {
     const month: string = MonthNames[data.month];
-    const pdfName = `FMB-workplace-document_${userName.replace(
+    const pdfName = `FMB-proof-of-work-location_${userName.replace(
       / /g,
       '_'
     )}_${month}-${data.year}`;
@@ -233,7 +233,7 @@ const SubmitAndExportPDF = ({
     const docMargin = 15;
 
     /** TITLE **/
-    const title = `FMB Usual Workplace Document - ${month} ${data.year}`;
+    const title = `FMB Proof of Work Location - ${month} ${data.year}`;
     doc
       .setFontSize(12)
       .setFont(undefined, 'bold')
@@ -254,11 +254,13 @@ const SubmitAndExportPDF = ({
     /** OPENING TEXT **/
     const openingText: string = getOpeningText(month);
     doc.setFontSize(9);
-    doc.setFont(undefined, 'normal').text(openingText, docMargin, 25);
+    doc.setFont(undefined, 'normal').text(openingText, docMargin, 25, {
+      maxWidth: doc.internal.pageSize.width - 2 * docMargin,
+      align: 'left',
+    });
 
     /** TABLE OF ADDRESSES **/
-    const addressesStartY: number =
-      mainWorkplace.addressName === 'Home' ? 45 : 50;
+    const addressesStartY = 50;
     // Title
     doc
       .setFont(undefined, 'bold')
@@ -273,7 +275,7 @@ const SubmitAndExportPDF = ({
           add.addressName,
           add.address,
           occurrence,
-          add.distanceFromHome,
+          add.distanceFromResAdd,
         ];
         addressesData.push(rowData);
       }
@@ -304,7 +306,7 @@ const SubmitAndExportPDF = ({
     });
 
     // Address table notes
-    const addrTabNotes = '*Distance from the official place of residence';
+    const addrTabNotes = '*Distance from the residential address';
     doc
       .setFont(undefined, 'normal')
       .setFontSize(7)
@@ -322,16 +324,16 @@ const SubmitAndExportPDF = ({
       );
 
     // Calendar table notes - abbreviation descriptions
-    const abbrDesc = 'WE / PH = Weekend or Public Holiday, PTO = Paid Time Off';
-    doc
-      .setFont(undefined, 'normal')
-      .text(
-        abbrDesc,
-        doc.internal.pageSize.width -
-          doc.getTextDimensions(abbrDesc).w -
-          docMargin,
-        addressesEndY + doc.getTextDimensions(addrTabNotes).h + 10
-      );
+    // const abbrDesc = 'WE = Weekend';
+    // doc
+    //   .setFont(undefined, 'normal')
+    //   .text(
+    //     abbrDesc,
+    //     doc.internal.pageSize.width -
+    //       doc.getTextDimensions(abbrDesc).w -
+    //       docMargin,
+    //     addressesEndY + doc.getTextDimensions(addrTabNotes).h + 10
+    //   );
 
     // Creating array of data to fill the cells in the following calendar table
     const calendarData = [];
@@ -351,7 +353,6 @@ const SubmitAndExportPDF = ({
 
     // TO DO: Improve table layout (with AM and PM)
     // Creating calendar table
-    let calendarTableY: number | undefined = 0;
     (doc as any).autoTable({
       theme: 'grid',
       styles: { fontSize: 9 },
@@ -359,27 +360,12 @@ const SubmitAndExportPDF = ({
       body: calendarData,
       startY: addressesEndY + doc.getTextDimensions(addrTabNotes).h + 12,
       columnStyles: getColumnStyles(),
-      didDrawPage: function (data) {
-        calendarTableY = data.cursor?.y;
-      },
       didParseCell: function (data) {
         if (data.section === 'body' && data.cell.raw) {
           getCellStyle(data);
         }
       },
     });
-
-    doc
-      .setFont(undefined, 'italic')
-      .text(
-        `I acknowledge that the information above is correct and confirm I have worked the majority of my working time from ${mainWorkplace.addressName}.`,
-        docMargin,
-        calendarTableY + 10,
-        {
-          maxWidth: doc.internal.pageSize.width - 2 * docMargin,
-          align: 'left',
-        }
-      );
 
     if (files && Array.from(files).length > 0) {
       await mergeFilesAndDownload(doc, files, pdfName);
@@ -411,7 +397,7 @@ const SubmitAndExportPDF = ({
         data-tooltip-content={
           !userName
             ? 'Please add your full name'
-            : !mainWorkplace
+            : !addresses[0]
             ? 'Please add your residential address'
             : 'You are not eligible to receive a reimbursement'
         }

@@ -1,10 +1,10 @@
 export enum StorageTypes {
   USER_NAME = 'userName',
-  HOME_ADDRESS = 'homeAddress',
+  RES_ADDRESSES = 'residentialAddresses',
   ADDRESSES = 'addresses',
   FILES = 'files',
   WORKDAYS = 'workdays',
-  MAINWORKPLACE = 'mainWorkplace',
+  MAINWORKPLACES = 'mainWorkplaces',
 }
 
 export enum ModalTypes {

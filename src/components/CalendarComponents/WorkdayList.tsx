@@ -1,13 +1,13 @@
-import React from 'react';
-import { Address, Addresses, WDay } from '../../models/types';
+import React, { useEffect, useState } from 'react';
+import { Address, WDay } from '../../models/types';
 import { TimeOfDay } from '../../models/enums';
 import DayItem from './DayItem';
-import publicHolidays from '../../hr/public_holidays.json';
 
 type ListProps = {
   month: WDay[];
-  addresses: Addresses;
-  homeAddress: Address;
+  addresses: Address[];
+  resAddress: Address;
+  displayedDate: Date;
   updateDay: (editedDay: WDay) => void;
   updateMonth: (editedMonth: WDay[]) => void;
   isSplitDay: boolean;
@@ -28,15 +28,23 @@ type WeekData = {
 const WorkdayList = ({
   month,
   addresses,
-  homeAddress,
+  resAddress,
+  displayedDate,
   updateDay,
   updateMonth,
   isSplitDay,
 }: ListProps) => {
-  const isFirstFullWeekFriday = (index: number, day: WDay) => {
-    const hasBeenOneFullWeek: boolean = index > 3 && index < 11;
-    const isFriday: boolean = new Date(day.workDate).getDay() === 5;
-    return hasBeenOneFullWeek && isFriday;
+  const [firstFullWeekIndexes, setFirstFullWeekIndexes] = useState<number[]>(
+    []
+  );
+
+  useEffect(() => {
+    findFirstFullWeek();
+  }, [displayedDate]);
+
+  const findFirstFullWeek = () => {
+    let i = month.findIndex((d) => new Date(d.workDate).getDay() === 1);
+    setFirstFullWeekIndexes([i++, i++, i++, i++, i++]);
   };
 
   const autofillWeeks = (index: number) => {
@@ -59,7 +67,8 @@ const WorkdayList = ({
         (weekday: WeekData) =>
           new Date(day.workDate).getDay() === weekday.dayNumber
       );
-      if (dayOfWeek && i > index && !publicHolidays.includes(day.workDate)) {
+      // if (dayOfWeek && i > index && !publicHolidays.includes(day.workDate)) {
+      if (dayOfWeek && i > index) {
         day.workPlaceAddressAm = dayOfWeek.workPlaceAddressAm;
         day.workPlaceAddressPm = dayOfWeek.workPlaceAddressPm;
         day.isWorkdayAm = dayOfWeek.isWorkdayAm;
@@ -75,6 +84,7 @@ const WorkdayList = ({
 
   const Item = ({ day, index }: ItemProps) => {
     const date: Date = new Date(day.workDate);
+    const isWeekend: boolean = date.getDay() % 6 === 0;
     const weekday: string = date.toLocaleDateString('en-gb', {
       weekday: 'short',
     });
@@ -86,24 +96,32 @@ const WorkdayList = ({
 
     return (
       <>
-        <tr className='even:bg-base-100 odd:bg-accent odd:bg-opacity-20'>
-          <td className='flex !flex-row justify-between cellItem first:bg-accent first:bg-opacity-30'>
-            <div>{weekday}</div>
-            <div>{formattedDate}</div>
+        <tr
+          className={
+            isWeekend
+              ? 'bg-accent'
+              : firstFullWeekIndexes.includes(index)
+              ? 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20 border-x-4 border-primary'
+              : 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20'
+          }
+        >
+          <td className='cellItem first:bg-accent first:bg-opacity-30'>
+            <div className='absolute left-[10px] text-left'>{weekday}</div>
+            <div className='text-right'>{formattedDate}</div>
           </td>
           {isSplitDay ? (
             <>
               <DayItem
                 day={day}
                 time={TimeOfDay.AM}
-                defaultWorkplace={homeAddress}
+                defaultWorkplace={resAddress}
                 addresses={addresses}
                 updateDay={updateDay}
               />
               <DayItem
                 day={day}
                 time={TimeOfDay.PM}
-                defaultWorkplace={homeAddress}
+                defaultWorkplace={resAddress}
                 addresses={addresses}
                 updateDay={updateDay}
               />
@@ -112,17 +130,17 @@ const WorkdayList = ({
             <DayItem
               day={day}
               time={TimeOfDay.FULL}
-              defaultWorkplace={homeAddress}
+              defaultWorkplace={resAddress}
               addresses={addresses}
               updateDay={updateDay}
             />
           )}
         </tr>
-        {isFirstFullWeekFriday(index, day) && (
-          <tr className='full-width'>
-            <td className='p-0 border-none'>
+        {firstFullWeekIndexes[4] === index && (
+          <tr>
+            <td className='p-0' colSpan={isSplitDay ? 7 : 4}>
               <button
-                className='btn btn-primary w-full'
+                className='btn btn-primary w-full rounded-t-none margin-none no-animation'
                 onClick={() => autofillWeeks(index)}
               >
                 <span className='mr-3 mb-0.5 text-lg'>{'\u21E9'}</span>Click to
@@ -139,22 +157,24 @@ const WorkdayList = ({
   const SplitDayHeaders = () => {
     return (
       <thead>
-        <tr className='table-header-grid'>
-          <th className='sticky bg-primary text-white row-span-2 header-date'>
+        <tr>
+          <th className='bg-primary w-1/8' rowSpan={2}>
             Date
           </th>
-          <th className='sticky bg-primary text-white col-start-2 col-span-3'>
+          <th className='bg-primary' colSpan={3}>
             Morning
           </th>
-          <th className='bg-primary text-white col-start-5 col-span-3'>
+          <th className='bg-primary' colSpan={3}>
             Afternoon
           </th>
-          <th className='bg-primary text-white bg-opacity-70'>Location</th>
-          <th className='bg-primary text-white bg-opacity-70'>Workday</th>
-          <th className='bg-primary text-white bg-opacity-70'>Holiday</th>
-          <th className='bg-primary text-white bg-opacity-80'>Location</th>
-          <th className='bg-primary text-white bg-opacity-80'>Workday</th>
-          <th className='bg-primary text-white bg-opacity-80'>Holiday</th>
+        </tr>
+        <tr>
+          <th className='light-purple'>Location</th>
+          <th className='light-purple'>Work Day</th>
+          <th className='light-purple'>Absence</th>
+          <th className='medium-purple'>Location</th>
+          <th className='medium-purple'>Work Day</th>
+          <th className='medium-purple'>Absence</th>
         </tr>
       </thead>
     );
@@ -164,35 +184,25 @@ const WorkdayList = ({
     return (
       <thead>
         <tr className='table-header-grid'>
-          <th className='sticky top-0 bg-primary text-white header-date'>
-            Date
-          </th>
-          <th className='sticky top-0 bg-primary text-white'>Location</th>
-          <th className='sticky top-0 bg-primary text-white'>Workday</th>
-          <th className='sticky top-0 bg-primary text-white'>Holiday</th>
+          <th className='bg-primary w-1/5'>Date</th>
+          <th className='bg-primary'>Location</th>
+          <th className='bg-primary'>Work Day</th>
+          <th className='bg-primary'>Absence</th>
         </tr>
       </thead>
     );
   };
 
   return (
-    <div className='formContainer'>
-      <div>
-        <table
-          className={
-            isSplitDay
-              ? 'relative w-full wTable split-days'
-              : 'relative w-full wTable non-split-days'
-          }
-        >
-          {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
-          <tbody className='itemContainer'>
-            {month.map((day, index) => (
-              <Item key={index} day={day} index={index} />
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <div>
+      <table className='table w-full wTable table-fixed'>
+        {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
+        <tbody>
+          {month.map((day, index) => (
+            <Item key={index} day={day} index={index} />
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

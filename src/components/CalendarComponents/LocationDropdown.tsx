@@ -86,7 +86,7 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
             : 'cellItem'
         }
       >
-        <div>N/A</div>
+        <div className='text-center'>N/A</div>
       </td>
     );
   }

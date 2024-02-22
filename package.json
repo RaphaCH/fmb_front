@@ -1,8 +1,8 @@
 {
-  "name": "fmb-housing-tool",
-  "productName": "FMB Housing Tool",
+  "name": "fmb-proof-of-work-location",
+  "productName": "FMB Housing Costs - Proof of Work Location",
   "version": "1.0.0",
-  "description": "An Accenture application to calculate and download proof of eligibility to receive a housing costs reimbursement through the Belgian Federal Mobility Budget",
+  "description": "An Accenture application used to download proof of work location to receive a housing costs reimbursement through the Belgian Federal Mobility Budget",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
