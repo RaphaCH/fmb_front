@@ -36,8 +36,11 @@ const Calendar = ({
   };
 
   const updateMonth = (editedMonth: WDay[]) => {
-    data.workdays = editedMonth;
-    updateWorkdaysByMonth(data);
+    updateWorkdaysByMonth({
+      month: data.month,
+      year: data.year,
+      workdays: editedMonth,
+    });
   };
 
   return (

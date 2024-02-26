@@ -70,7 +70,7 @@ function App() {
       setHasUpdatedDate(false);
       setDisplayedDate(selectedDate);
     }
-  }, [hasUpdatedDate]);
+  }, [hasUpdatedDate, monthData]);
 
   const handleSaveUserName = (name: string) => {
     setUserName(name);

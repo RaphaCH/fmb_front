@@ -67,7 +67,6 @@ const WorkdayList = ({
         (weekday: WeekData) =>
           new Date(day.workDate).getDay() === weekday.dayNumber
       );
-      // if (dayOfWeek && i > index && !publicHolidays.includes(day.workDate)) {
       if (dayOfWeek && i > index) {
         day.workPlaceAddressAm = dayOfWeek.workPlaceAddressAm;
         day.workPlaceAddressPm = dayOfWeek.workPlaceAddressPm;
