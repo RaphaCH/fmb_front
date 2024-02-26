@@ -139,7 +139,7 @@ const Attachments = ({
           <div className='flex'>
             <h1>
               Upload PDF files to be appended to the document (e.g. your rental
-              or mortgage contract).
+              contract or amortization table).
             </h1>
             <img
               className='info-icon'

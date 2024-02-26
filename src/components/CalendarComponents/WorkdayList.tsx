@@ -101,11 +101,11 @@ const WorkdayList = ({
             isWeekend
               ? 'bg-accent'
               : firstFullWeekIndexes.includes(index)
-              ? 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20 border-x-4 border-primary'
-              : 'even:bg-base-100 odd:bg-accent odd:bg-opacity-20'
+              ? 'purple-row first-week-border'
+              : 'purple-row'
           }
         >
-          <td className='cellItem first:bg-accent first:bg-opacity-30'>
+          <td className='cellItem'>
             <div className='absolute left-[10px] text-left'>{weekday}</div>
             <div className='text-right'>{formattedDate}</div>
           </td>
@@ -195,7 +195,7 @@ const WorkdayList = ({
 
   return (
     <div>
-      <table className='table w-full wTable table-fixed'>
+      <table className='table w-full wTable table-fixed border-collapse'>
         {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
         <tbody>
           {month.map((day, index) => (

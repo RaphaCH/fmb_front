@@ -59,7 +59,7 @@ const WorkdayTypeRadioButtons = ({
             value='workday'
             defaultChecked={day.isWorkdayAm ?? false}
             required={!day.isWeekend}
-            className='checkbox checkbox-primary checkbox-xs no-animation'
+            className='checkbox checkbox-primary checkbox-xs no-animation mt-2.5'
             onClick={() => setWorkdayTypeFullDay('workday')}
           />
         </td>
@@ -71,7 +71,7 @@ const WorkdayTypeRadioButtons = ({
               value='holiday'
               defaultChecked={day.isHolidayAm ?? false}
               required={!day.isWeekend}
-              className='checkbox checkbox-primary checkbox-xs no-animation'
+              className='checkbox checkbox-primary checkbox-xs no-animation mt-2.5'
               onClick={() => setWorkdayTypeFullDay('holiday')}
             />
           )}
@@ -81,30 +81,18 @@ const WorkdayTypeRadioButtons = ({
   } else {
     return (
       <>
-        <td
-          className={
-            time === TimeOfDay.PM
-              ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-              : 'cellItem'
-          }
-        >
+        <td className='cellItem'>
           <input
             type='radio'
             name={`${day.workDate}-${time}`}
             value='workday'
             defaultChecked={day[`isWorkday${time}`] ?? false}
             required={!day.isWeekend}
-            className='checkbox checkbox-primary checkbox-xs no-animation'
+            className='checkbox checkbox-primary checkbox-xs no-animation mt-2.5'
             onClick={() => setWorkdayType('workday')}
           />
         </td>
-        <td
-          className={
-            time === TimeOfDay.PM
-              ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-              : 'cellItem'
-          }
-        >
+        <td className='cellItem'>
           {!day.isWeekend && (
             <input
               type='radio'
@@ -112,7 +100,7 @@ const WorkdayTypeRadioButtons = ({
               value='holiday'
               defaultChecked={day[`isHoliday${time}`] ?? false}
               required={!day.isWeekend}
-              className='checkbox checkbox-primary checkbox-xs no-animation'
+              className='checkbox checkbox-primary checkbox-xs no-animation mt-2.5'
               onClick={() => setWorkdayType('holiday')}
             />
           )}

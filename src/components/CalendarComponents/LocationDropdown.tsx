@@ -46,13 +46,7 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
   // If user has worked during a non-split day or at the specified time on a split day
   if ((time === TimeOfDay.FULL && day.isWorkdayAm) || day[`isWorkday${time}`]) {
     return (
-      <td
-        className={
-          time === TimeOfDay.PM
-            ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-            : 'cellItem'
-        }
-      >
+      <td className='cellItem'>
         <div className='dropdown dropdown-bottom w-full flex justify-center text-center'>
           <div tabIndex={0} className='mouseHover selectLocation'>
             {selectedAddress(time === TimeOfDay.FULL ? TimeOfDay.AM : time)}
@@ -79,13 +73,7 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
     );
   } else {
     return (
-      <td
-        className={
-          time === TimeOfDay.PM
-            ? 'cellItem even:bg-accent even:bg-opacity-30 odd:bg-accent odd:bg-opacity-30'
-            : 'cellItem'
-        }
-      >
+      <td className='cellItem'>
         <div className='text-center'>N/A</div>
       </td>
     );
