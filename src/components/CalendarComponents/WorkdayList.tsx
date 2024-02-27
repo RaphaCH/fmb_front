@@ -63,7 +63,7 @@ const WorkdayList = ({
       });
 
     month = month.map((day: WDay, i: number) => {
-      const dayOfWeek = weekData.find(
+      const dayOfWeek: WeekData = weekData.find(
         (weekday: WeekData) =>
           new Date(day.workDate).getDay() === weekday.dayNumber
       );
