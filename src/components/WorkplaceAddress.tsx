@@ -125,8 +125,8 @@ const WorkplaceAddress = ({
                 maxLength={15}
                 className={
                   addresses.length < 1 || addresses.length > 10
-                    ? 'input input-bordered w-full max-w-xs formInput disabled-input-field'
-                    : 'input input-bordered w-full max-w-xs formInput'
+                    ? 'input input-bordered w-full max-w-xs form-input disabled-input-field'
+                    : 'input input-bordered w-full max-w-xs form-input'
                 }
                 {...register('name', {
                   onChange: () => {
@@ -156,8 +156,8 @@ const WorkplaceAddress = ({
                   <input
                     className={
                       addresses.length < 1 || addresses.length > 10
-                        ? 'input input-bordered w-full max-w-xs formInput disabled-input-field'
-                        : 'input input-bordered w-full max-w-xs formInput'
+                        ? 'input input-bordered w-full max-w-xs form-input disabled-input-field'
+                        : 'input input-bordered w-full max-w-xs form-input'
                     }
                     placeholder='Street, number, city'
                     {...register('address')}
@@ -189,14 +189,14 @@ const WorkplaceAddress = ({
             </form>
           </div>
           {addressInfos && (
-            <div className='comLocation add-address-details'>
+            <div className='location-details add-address-details'>
               <img className='h-20' src={location} alt='location pin' />
-              <p className='comAddress text-center'>
+              <p className='text-secondary text-center'>
                 {addressInfos.formatted_address}
               </p>
             </div>
           )}
-          <div className='clientMapContainer'>
+          <div className='map-container'>
             {addressInfos && (
               <Maps
                 lat={addressInfos?.geometry?.location.lat}

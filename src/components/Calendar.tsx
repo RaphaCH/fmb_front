@@ -45,7 +45,7 @@ const Calendar = ({
 
   return (
     <div>
-      <h2 className='sectionTitle'>Calendar</h2>
+      <h2 className='section-title'>Calendar</h2>
       <div className='toggle-month-picker'>
         <SplitDayToggle
           isSplitDay={isSplitDay}

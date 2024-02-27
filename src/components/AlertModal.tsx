@@ -1,11 +1,9 @@
 import React from 'react';
 import Modal from 'react-modal';
-import Maps from './Maps';
 import { ModalDetails } from '../models/types';
 import { ModalTypes } from '../models/enums';
 import info from '../assets/icons/info.png';
 import successIcon from '../assets/icons/success_purple.png';
-import location from '../assets/icons/location.png';
 
 Modal.setAppElement('#root');
 
@@ -45,8 +43,8 @@ const AlertModal = ({
           style={customStyles}
           contentLabel='Warning'
         >
-          <div className='modalContainer'>
-            <div className='modalInfo'>
+          <div className='modal-container'>
+            <div className='modal-info'>
               <div>
                 <img
                   className='padded-icon'
@@ -56,7 +54,7 @@ const AlertModal = ({
                   height={30}
                 />
               </div>
-              <p className='modalText'>{modalDetails.message}</p>
+              <p className='modal-text'>{modalDetails.message}</p>
             </div>
             <div className='flex'>
               {cancelAction && (
@@ -87,10 +85,10 @@ const AlertModal = ({
           style={customStyles}
           contentLabel='Error'
         >
-          <div className='modalContainer'>
-            <div className='flex flex-col items-center modalInfo'>
-              <p className='boxTitle'>Error</p>
-              <p className='modalText'>{modalDetails.message}</p>
+          <div className='modal-container'>
+            <div className='flex flex-col items-center modal-info'>
+              <p className='box-title'>Error</p>
+              <p className='modal-text'>{modalDetails.message}</p>
             </div>
             <div className='flex'>
               <button
@@ -106,51 +104,10 @@ const AlertModal = ({
     case ModalTypes.SUCCESS:
       return (
         <Modal isOpen={modalIsOpen} style={customStyles} contentLabel='Success'>
-          <div className='modalContainer'>
-            <div className='flex flex-col items-center modalInfo'>
-              <p className='modalText'>{modalDetails.message}</p>
+          <div className='modal-container'>
+            <div className='flex flex-col items-center modal-info'>
+              <p className='modal-text'>{modalDetails.message}</p>
               <img src={successIcon} alt='Success' width={30} height={30} />
-            </div>
-          </div>
-        </Modal>
-      );
-    case ModalTypes.ADDRESS:
-      return (
-        <Modal isOpen={modalIsOpen} style={customStyles} contentLabel='Success'>
-          <div className='modalContainer'>
-            {modalDetails.addressInfos ? (
-              <div className='flex flex-col items-center modalInfo'>
-                <div className='comLocation'>
-                  <img className='h-20' src={location} alt='location pin' />
-                  <p>{modalDetails.addressInfos.formatted_address}</p>
-                </div>
-                <Maps
-                  lat={modalDetails.addressInfos?.geometry?.location.lat}
-                  lng={modalDetails.addressInfos?.geometry?.location.lng}
-                  width='350px'
-                  height='250px'
-                />
-              </div>
-            ) : (
-              <p className='modalText'>Cannot find address</p>
-            )}
-            <div className='flex'>
-              {cancelAction && (
-                <button
-                  className='btn btn-primary btn-outline'
-                  onClick={cancelAction}
-                >
-                  Cancel
-                </button>
-              )}
-              {confirmAction && (
-                <button
-                  className='btn btn-primary btn-outline'
-                  onClick={confirmAction}
-                >
-                  Confirm
-                </button>
-              )}
             </div>
           </div>
         </Modal>
@@ -163,7 +120,7 @@ const AlertModal = ({
           style={customStyles}
           contentLabel='Preview'
         >
-          <div className='modalContainer'>
+          <div className='modal-container'>
             <iframe
               title='File preview'
               src={modalDetails.url}

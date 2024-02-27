@@ -18,7 +18,7 @@ const Collapsible = ({
         onClick={() => setCollapsed(!collapsed)}
         className='cursor-pointer flex justify-between items-center'
       >
-        <h3 className='boxTitle'>{title}</h3>
+        <h3 className='box-title'>{title}</h3>
         {collapsed ? (
           <div className='collapsible-arrow down' />
         ) : (

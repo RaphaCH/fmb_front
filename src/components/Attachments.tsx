@@ -99,7 +99,7 @@ const Attachments = ({
     return (
       <li className='flex w-fit'>
         <button
-          className='iconBtn'
+          className='icon-btn'
           onMouseEnter={() => setIsDeleteHovered(true)}
           onMouseLeave={() => setIsDeleteHovered(false)}
           onClick={() => deleteFile(index)}
@@ -113,7 +113,7 @@ const Attachments = ({
           )}
         </button>
         <p
-          className='mouseHover'
+          className='mouse-hover'
           onClick={() =>
             openModal({
               message: '',
@@ -180,7 +180,7 @@ const Attachments = ({
         </form>
         {files && files.length > 0 && (
           <div className='ml-[40px]'>
-            <h2 className='subSectionTitle'>Uploaded files</h2>
+            <h2 className='subsection-title'>Uploaded files</h2>
             <ul>
               {Array.from(files)?.map((file, index) => (
                 <FileItem key={index} file={file} index={index} />
