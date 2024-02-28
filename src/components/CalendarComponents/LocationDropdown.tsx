@@ -50,7 +50,7 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
         <div className='dropdown dropdown-bottom w-full flex justify-center text-center'>
           <div tabIndex={0} className='mouse-hover select-location'>
             {selectedAddress(time === TimeOfDay.FULL ? TimeOfDay.AM : time)}
-            <img src={downArrow} alt='arrow' />
+            {addresses.length > 0 && <img src={downArrow} alt='arrow' />}
           </div>
           <ul
             tabIndex={0}

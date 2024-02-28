@@ -136,7 +136,7 @@ const Attachments = ({
     return (
       <div className='attachments text-sm flex'>
         <form>
-          <div className='flex'>
+          <div className='flex w-[670px]'>
             <h1>
               Upload PDF files to be appended to the document (e.g. your rental
               contract or amortization table).
