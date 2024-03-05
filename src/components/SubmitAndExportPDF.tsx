@@ -3,7 +3,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PDFMerger from 'pdf-merger-js/browser';
 import { Address, WDay, WMonth } from '../models/types';
-import logoSrc from '../assets/icons/Acc_Logo_Black_Purple_RGB.png';
+import logoSrc from '../assets/images/Acc_Logo_Black_Purple_RGB.png';
 import { Tooltip } from 'react-tooltip';
 
 const MonthNames = [
@@ -238,6 +238,8 @@ const SubmitAndExportPDF = ({
       .setFontSize(12)
       .setFont(undefined, 'bold')
       .text(title, docMargin, docMargin);
+
+    console.log(logoDimensions);
 
     /** LOGO */
     doc.addImage(
