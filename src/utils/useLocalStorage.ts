@@ -5,6 +5,8 @@ import {
   ResAddresses,
   StoredFile,
   Workdays,
+  MonthAddresses,
+  ResAddress,
 } from '../models/types';
 
 const useLocalStorage = () => {
@@ -63,7 +65,22 @@ const useLocalStorage = () => {
     }
   };
 
-  return { setItem, getItem };
+  const clearWorkdaysAndAddresses = (month: number, year: number) => {
+    const lastResAddress: ResAddress = getItem(
+      StorageTypes.RES_ADDRESSES
+    ).pop();
+    const lastAddresses: MonthAddresses = getItem(StorageTypes.ADDRESSES).pop();
+    setItem(StorageTypes.RES_ADDRESSES, [
+      { ...lastResAddress, month: month, year: year },
+    ]);
+    setItem(StorageTypes.ADDRESSES, [
+      { ...lastAddresses, month: month, year: year },
+    ]);
+    localStorage.removeItem(StorageTypes.MAINWORKPLACES);
+    localStorage.removeItem(StorageTypes.WORKDAYS);
+  };
+
+  return { setItem, getItem, clearWorkdaysAndAddresses };
 };
 
 export default useLocalStorage;

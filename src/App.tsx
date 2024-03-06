@@ -30,7 +30,7 @@ import toBase64 from './utils/toBase64';
 
 function App() {
   const currentDate: Date = new Date();
-  const { getItem, setItem } = useLocalStorage();
+  const { getItem, setItem, clearWorkdaysAndAddresses } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [displayedDate, setDisplayedDate] = useState<Date>(currentDate);
   const [selectedMY, setSelectedMY] = useState<MonthYear>({
@@ -64,6 +64,7 @@ function App() {
   useEffect(() => {
     if (hasUpdatedDate) {
       const updatedAddresses: Address[] = handleAddressData();
+      refreshNewYear();
       handleResAddressData(updatedAddresses);
       handleMainWorkplaceData(updatedAddresses);
       handleWorkdayData(updatedAddresses[0]);
@@ -71,6 +72,13 @@ function App() {
       setDisplayedDate(selectedDate);
     }
   }, [hasUpdatedDate, monthData]);
+
+  const refreshNewYear = () => {
+    const storedWorkdayData = getItem(StorageTypes.WORKDAYS);
+    if (!storedWorkdayData?.find((m: WMonth) => m.year === selectedMY.year)) {
+      clearWorkdaysAndAddresses(selectedMY.month, selectedMY.year);
+    }
+  };
 
   const handleSaveUserName = (name: string) => {
     setUserName(name);
