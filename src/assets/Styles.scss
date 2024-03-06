@@ -133,10 +133,15 @@ header {
     display: none;
   }
 
-  img.info-icon {
-    cursor: pointer;
-    width: 10px;
-    height: 10px;
+  span.info-icon {
+    display: inline-block;
+    vertical-align: text-top;
+
+    img {
+      cursor: pointer;
+      width: 10px;
+      height: 10px;
+    }
   }
 
   .btn {
@@ -332,6 +337,10 @@ header {
   margin-bottom: 10px;
   font-size: 0.875rem;
 
+  @media (min-width: $breakpoint-large) {
+    width: 500px;
+  }
+
   .modal-info {
     display: flex;
     justify-content: center;
@@ -352,6 +361,14 @@ header {
       &:first-letter {
         text-transform: capitalize;
       }
+    }
+  }
+
+  .file-preview {
+    height: 400px;
+    @media (min-width: $breakpoint-large) {
+      height: 650px;
+      width: 500px;
     }
   }
 
@@ -421,6 +438,16 @@ p.error-message {
 #eligibilityMessage {
   margin: 10px;
   font-size: 0.875rem;
+}
+
+#disclaimer {
+  margin-bottom: 20px;
+  font-size: 0.75rem;
+}
+
+#footer {
+  margin-top: 10px;
+  font-size: 0.75rem;
 }
 
 .checkbox:indeterminate {

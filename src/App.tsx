@@ -27,6 +27,8 @@ import Header from './components/Header';
 import EligibilityMessage from './components/EligibilityMessage';
 import getDistance from './utils/getDistance';
 import toBase64 from './utils/toBase64';
+import Disclaimer from './components/Disclaimer';
+import Footer from './components/Footer';
 
 function App() {
   const currentDate: Date = new Date();
@@ -178,7 +180,7 @@ function App() {
   };
 
   const addWorkPlaceAddress = (
-    group: {},
+    group: object,
     product: WDay,
     workPlaceAddress: Address | null
   ) => {
@@ -192,7 +194,7 @@ function App() {
 
   const updateMainWorkplace = (updatedMonthData: WMonth) => {
     const groupByLocation = updatedMonthData.workdays.reduce(
-      (group: {}, product: WDay) => {
+      (group: object, product: WDay) => {
         const { workPlaceAddressAm, workPlaceAddressPm } = product;
         group = addWorkPlaceAddress(group, product, workPlaceAddressAm);
         group = addWorkPlaceAddress(group, product, workPlaceAddressPm);
@@ -560,6 +562,7 @@ function App() {
     <div className='App'>
       <div className='app-container'>
         <Header />
+        <Disclaimer />
         <UserName userName={userName} handleSaveUserName={handleSaveUserName} />
         <Attachments
           files={files}
@@ -602,6 +605,7 @@ function App() {
           distance={distance}
           files={files}
         />
+        <Footer />
       </div>
       <AlertModal
         modalIsOpen={isModalOpen}
