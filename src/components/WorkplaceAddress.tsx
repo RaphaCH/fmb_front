@@ -122,7 +122,7 @@ const WorkplaceAddress = ({
               </label>
               <input
                 placeholder='Enter name'
-                maxLength={15}
+                maxLength={19}
                 className={
                   addresses.length < 1 || addresses.length > 10
                     ? 'input input-bordered w-full max-w-xs form-input disabled-input-field'
@@ -162,6 +162,7 @@ const WorkplaceAddress = ({
                     placeholder='Street, number, city'
                     {...register('address')}
                     required
+                    autoComplete='off'
                   />
                 </div>
                 <button

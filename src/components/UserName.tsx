@@ -14,6 +14,7 @@ const UserName = ({ userName, handleSaveUserName }: Props) => {
           defaultValue={userName}
           onBlur={(e) => handleSaveUserName(e.target.value.trim())}
           className='input input-bordered w-full max-w-xs form-input'
+          autoComplete='off'
         />
       </div>
     </div>

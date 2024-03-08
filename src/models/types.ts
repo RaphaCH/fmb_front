@@ -58,8 +58,8 @@ export type WMonth = {
 export type Workdays = WMonth[];
 
 export type ModalDetails = {
-  message: string;
   type: ModalTypes;
+  message?: string;
   addressInfos?: undefined | APIAddress;
   url?: string;
 };

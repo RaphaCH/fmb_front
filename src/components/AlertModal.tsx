@@ -88,7 +88,10 @@ const AlertModal = ({
           <div className='modal-container'>
             <div className='flex flex-col items-center modal-info'>
               <p className='box-title'>Error</p>
-              <p className='modal-text'>{modalDetails.message}</p>
+              <p className='modal-text'>
+                Sorry, there has been an error. Please try again or inform the
+                mobility team if the error remains.
+              </p>
             </div>
             <div className='flex'>
               <button
@@ -122,9 +125,9 @@ const AlertModal = ({
         >
           <div className='modal-container'>
             <iframe
+              className='file-preview'
               title='File preview'
               src={modalDetails.url}
-              height='400px'
             />
           </div>
           <div className='flex'>

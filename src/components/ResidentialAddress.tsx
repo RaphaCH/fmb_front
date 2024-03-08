@@ -19,7 +19,6 @@ const ResidentialAddress = ({
   const [addressInfos, setAddressInfos] = useState<undefined | APIAddress>(
     undefined
   );
-  const isResAddress = resAddress !== undefined;
   const inputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -97,6 +96,7 @@ const ResidentialAddress = ({
                 type='text'
                 ref={inputRef}
                 defaultValue={addressInfos?.inputValueAddress ?? ''}
+                autoComplete='off'
               />
             </div>
             <button
@@ -153,4 +153,4 @@ const ResidentialAddress = ({
     </div>
   );
 };
-export default ResidentialAddress;
+export default React.memo(ResidentialAddress);

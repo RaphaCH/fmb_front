@@ -32,6 +32,7 @@ import Footer from './components/Footer';
 
 function App() {
   const currentDate: Date = new Date();
+  currentDate.setFullYear(2025);
   const { getItem, setItem, clearWorkdaysAndAddresses } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [displayedDate, setDisplayedDate] = useState<Date>(currentDate);
@@ -48,12 +49,8 @@ function App() {
     message: 'Unknown alert',
     type: ModalTypes.ERROR,
   });
-  const [userName, setUserName] = useState<string>(
-    getItem(StorageTypes.USER_NAME) ?? ''
-  );
-  const [files, setFiles] = useState<FileList | null>(
-    getItem(StorageTypes.FILES) ?? []
-  );
+  const [userName, setUserName] = useState<string>('');
+  const [files, setFiles] = useState<FileList | null>(null);
   const [resAddress, setResAddress] = useState<Address | undefined>(undefined);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [monthData, setMonthData] = useState<WMonth | undefined>(undefined);
@@ -67,6 +64,7 @@ function App() {
     if (hasUpdatedDate) {
       const updatedAddresses: Address[] = handleAddressData();
       refreshNewYear();
+      handleNameAndFiles();
       handleResAddressData(updatedAddresses);
       handleMainWorkplaceData(updatedAddresses);
       handleWorkdayData(updatedAddresses[0]);
@@ -78,13 +76,42 @@ function App() {
   const refreshNewYear = () => {
     const storedWorkdayData = getItem(StorageTypes.WORKDAYS);
     if (!storedWorkdayData?.find((m: WMonth) => m.year === selectedMY.year)) {
-      clearWorkdaysAndAddresses(selectedMY.month, selectedMY.year);
+      if (
+        clearWorkdaysAndAddresses(selectedMY.month, selectedMY.year) === false
+      ) {
+        openModal({
+          type: ModalTypes.ERROR,
+        });
+      }
+    }
+  };
+
+  const handleNameAndFiles = () => {
+    const userName = getItem(StorageTypes.USER_NAME);
+    if (userName === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    } else {
+      setUserName(userName);
+    }
+    const files = getItem(StorageTypes.FILES);
+    if (files === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    } else {
+      setFiles(files);
     }
   };
 
   const handleSaveUserName = (name: string) => {
     setUserName(name);
-    setItem(StorageTypes.USER_NAME, name);
+    if (setItem(StorageTypes.USER_NAME, name) === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    }
   };
 
   const handleSaveData = () => {
@@ -291,7 +318,11 @@ function App() {
       });
       updatedResAddresses = updatedResAddresses.sort(sortMonths);
     }
-    setItem(StorageTypes.RES_ADDRESSES, updatedResAddresses);
+    if (setItem(StorageTypes.RES_ADDRESSES, updatedResAddresses) === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    }
   };
 
   const storeAllWorkplaceAddressesWithUpdatedAddresses = (
@@ -322,7 +353,11 @@ function App() {
       });
       updatedAddresses = updatedAddresses.sort(sortMonths);
     }
-    setItem(StorageTypes.ADDRESSES, updatedAddresses);
+    if (setItem(StorageTypes.ADDRESSES, updatedAddresses) === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    }
   };
 
   const storeAllMainWorkplacesWithUpdatedMainWorkplace = (
@@ -354,7 +389,11 @@ function App() {
       });
       updatedMainWorkplaces = updatedMainWorkplaces.sort(sortMonths);
     }
-    setItem(StorageTypes.MAINWORKPLACES, updatedMainWorkplaces);
+    if (setItem(StorageTypes.MAINWORKPLACES, updatedMainWorkplaces) === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    }
   };
 
   const storeWorkdaysWithUpdatedMonth = (updatedMonth: WMonth) => {
@@ -376,7 +415,11 @@ function App() {
       updatedWorkdays.push(updatedMonth);
       updatedWorkdays = updatedWorkdays.sort(sortMonths);
     }
-    setItem(StorageTypes.WORKDAYS, updatedWorkdays);
+    if (setItem(StorageTypes.WORKDAYS, updatedWorkdays) === false) {
+      openModal({
+        type: ModalTypes.ERROR,
+      });
+    }
   };
 
   const handleSaveNewAddress = (address: Address) => {
@@ -403,7 +446,11 @@ function App() {
         toStore.push(storageCompatibleFile as StoredFile);
       }
       setFiles(updatedFileList.files);
-      setItem(StorageTypes.FILES, toStore);
+      if (setItem(StorageTypes.FILES, toStore) === false) {
+        openModal({
+          type: ModalTypes.ERROR,
+        });
+      }
     }
   };
 
