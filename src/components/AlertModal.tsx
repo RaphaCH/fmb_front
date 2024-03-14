@@ -88,10 +88,14 @@ const AlertModal = ({
           <div className='modal-container'>
             <div className='flex flex-col items-center modal-info'>
               <p className='box-title'>Error</p>
-              <p className='modal-text'>
-                Sorry, there has been an error. Please try again or inform the
-                mobility team if the error remains.
-              </p>
+              {modalDetails.message ? (
+                <p>{modalDetails.message}</p>
+              ) : (
+                <p className='modal-text'>
+                  Sorry, there has been an error. Please try again or inform the
+                  mobility team if the error remains.
+                </p>
+              )}
             </div>
             <div className='flex'>
               <button

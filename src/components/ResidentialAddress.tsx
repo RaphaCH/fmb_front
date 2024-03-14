@@ -43,7 +43,12 @@ const ResidentialAddress = ({
       });
     } else {
       GetCoordinates(address).then((res) => {
-        if (!res?.formatted_address) {
+        if (res?.code === 'ERR_NETWORK') {
+          openModal({
+            message: 'Unable to connect to network.',
+            type: ModalTypes.ERROR,
+          });
+        } else if (!res?.formatted_address) {
           setAddressInfos(undefined);
           openModal({
             message: 'Unable to find address. Please modify search.',
