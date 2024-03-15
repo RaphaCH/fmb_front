@@ -104,7 +104,7 @@ const WorkdayList = ({
               : 'purple-row'
           }
         >
-          <td className='cellItem'>
+          <td className='cell-item'>
             <div className='absolute left-[10px] text-left'>{weekday}</div>
             <div className='text-right'>{formattedDate}</div>
           </td>
@@ -194,7 +194,7 @@ const WorkdayList = ({
 
   return (
     <div>
-      <table className='table w-full wTable table-fixed border-collapse'>
+      <table className='table w-full calendar-table table-fixed border-collapse'>
         {isSplitDay ? <SplitDayHeaders /> : <NonSplitDayHeaders />}
         <tbody>
           {month.map((day, index) => (

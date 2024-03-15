@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import location from '../assets/icons/location_filled.png';
 
@@ -23,7 +23,6 @@ const Maps = ({
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: 'AIzaSyB-DDSMVD0rYKzP8e-ueH_6HGXBrHCDUzA',
-    // OLD googleMapsApiKey: "AIzaSyB__EtBVr1pwPt3gTKBgp83NocjBZ9lj8o",
   });
 
   return isLoaded ? (

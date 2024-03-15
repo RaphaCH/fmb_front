@@ -1,9 +1,9 @@
 import React from 'react';
-import jsPDF from 'jspdf';
+import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import PDFMerger from 'pdf-merger-js/browser';
 import { Address, WDay, WMonth } from '../models/types';
-import logoSrc from '../assets/icons/Acc_Logo_Black_Purple_RGB.png';
+import logoSrc from '../assets/images/Acc_Logo_Black_Purple_RGB.png';
 import { Tooltip } from 'react-tooltip';
 
 const MonthNames = [
@@ -56,11 +56,12 @@ const SubmitAndExportPDF = ({
    * @returns - The string of text
    */
   const getOpeningText = (month: string) => {
-    let mainWorkplaceText = '';
+    let mainWorkplaceText =
+      'I declare that the housing costs, for which I am requesting a reimbursement, have not already been financed with another mobility budget, that my residential address is known by my employer, and that my rental contract or mortgage loan is ongoing. I acknowledge that the information below is correct and aligns with the information submitted in myTE.';
     if (mainWorkplace.addressName === 'Residential address') {
-      mainWorkplaceText = `I acknowledge that the information below is correct and aligned with the information submitted in myTE. The main workplace in ${month} ${data.year} was the residential address.`;
+      mainWorkplaceText += `\n\nThe main workplace in ${month} ${data.year} was the residential address.`;
     } else {
-      mainWorkplaceText = `I acknowledge that the information below is correct and aligned with the information submitted in myTE. The main workplace in ${month} ${data.year} was ${mainWorkplace.addressName}, which is ${distance} km away from the residential address.`;
+      mainWorkplaceText += `\n\nThe main workplace in ${month} ${data.year} was ${mainWorkplace.addressName}, which is ${distance} km away from the residential address.`;
     }
     return `Date: ${new Date().toLocaleDateString('en-gb', {
       day: '2-digit',
@@ -226,7 +227,7 @@ const SubmitAndExportPDF = ({
     const month: string = MonthNames[data.month];
     const pdfName = `FMB-proof-of-work-location_${userName.replace(
       / /g,
-      '_'
+      '-'
     )}_${month}-${data.year}`;
 
     const doc = new jsPDF('p', 'mm');
@@ -260,7 +261,7 @@ const SubmitAndExportPDF = ({
     });
 
     /** TABLE OF ADDRESSES **/
-    const addressesStartY = 50;
+    const addressesStartY = 60;
     // Title
     doc
       .setFont(undefined, 'bold')
@@ -294,7 +295,7 @@ const SubmitAndExportPDF = ({
       },
       columnStyles: {
         2: {
-          cellWidth: 20,
+          cellWidth: 30,
         },
         3: {
           cellWidth: 20,
@@ -322,18 +323,6 @@ const SubmitAndExportPDF = ({
         docMargin,
         addressesEndY + doc.getTextDimensions(addrTabNotes).h + 10
       );
-
-    // Calendar table notes - abbreviation descriptions
-    // const abbrDesc = 'WE = Weekend';
-    // doc
-    //   .setFont(undefined, 'normal')
-    //   .text(
-    //     abbrDesc,
-    //     doc.internal.pageSize.width -
-    //       doc.getTextDimensions(abbrDesc).w -
-    //       docMargin,
-    //     addressesEndY + doc.getTextDimensions(addrTabNotes).h + 10
-    //   );
 
     // Creating array of data to fill the cells in the following calendar table
     const calendarData = [];

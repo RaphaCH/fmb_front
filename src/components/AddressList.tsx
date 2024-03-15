@@ -25,7 +25,7 @@ const AddressList = ({ addresses, deleteAddress }: ListProps) => {
           <div className='cursor-pointer' style={{ width: '50px' }}>
             <>
               <button
-                className='iconBtn'
+                className='icon-btn'
                 onMouseEnter={() => setIsDeleteHovered(true)}
                 onMouseLeave={() => setIsDeleteHovered(false)}
                 onClick={() => deleteAddress(address)}
@@ -49,7 +49,7 @@ const AddressList = ({ addresses, deleteAddress }: ListProps) => {
   if (addresses.length > 1) {
     return (
       <div className='registered-addresses'>
-        <div className='overflow-x-auto radiusTable'>
+        <div className='overflow-x-auto workplace-addresses-table'>
           <table className='table w-full'>
             <thead>
               <tr>

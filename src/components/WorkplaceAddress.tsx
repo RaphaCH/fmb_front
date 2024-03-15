@@ -44,7 +44,12 @@ const WorkplaceAddress = ({
    */
   const handleFindAddress = (address: string) => {
     GetCoordinates(address).then((res) => {
-      if (!res?.formatted_address) {
+      if (res?.code === 'ERR_NETWORK') {
+        openModal({
+          message: 'Unable to connect to network.',
+          type: ModalTypes.ERROR,
+        });
+      } else if (!res?.formatted_address) {
         setAddressInfos(undefined);
         openModal({
           message: 'Unable to find address. Please modify search.',
@@ -122,11 +127,11 @@ const WorkplaceAddress = ({
               </label>
               <input
                 placeholder='Enter name'
-                maxLength={15}
+                maxLength={19}
                 className={
                   addresses.length < 1 || addresses.length > 10
-                    ? 'input input-bordered w-full max-w-xs formInput disabled-input-field'
-                    : 'input input-bordered w-full max-w-xs formInput'
+                    ? 'input input-bordered w-full max-w-xs form-input disabled-input-field'
+                    : 'input input-bordered w-full max-w-xs form-input'
                 }
                 {...register('name', {
                   onChange: () => {
@@ -156,12 +161,13 @@ const WorkplaceAddress = ({
                   <input
                     className={
                       addresses.length < 1 || addresses.length > 10
-                        ? 'input input-bordered w-full max-w-xs formInput disabled-input-field'
-                        : 'input input-bordered w-full max-w-xs formInput'
+                        ? 'input input-bordered w-full max-w-xs form-input disabled-input-field'
+                        : 'input input-bordered w-full max-w-xs form-input'
                     }
                     placeholder='Street, number, city'
                     {...register('address')}
                     required
+                    autoComplete='off'
                   />
                 </div>
                 <button
@@ -189,14 +195,14 @@ const WorkplaceAddress = ({
             </form>
           </div>
           {addressInfos && (
-            <div className='comLocation add-address-details'>
+            <div className='location-details add-address-details'>
               <img className='h-20' src={location} alt='location pin' />
-              <p className='comAddress text-center'>
+              <p className='text-secondary text-center'>
                 {addressInfos.formatted_address}
               </p>
             </div>
           )}
-          <div className='clientMapContainer'>
+          <div className='map-container'>
             {addressInfos && (
               <Maps
                 lat={addressInfos?.geometry?.location.lat}

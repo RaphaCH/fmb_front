@@ -19,7 +19,6 @@ const ResidentialAddress = ({
   const [addressInfos, setAddressInfos] = useState<undefined | APIAddress>(
     undefined
   );
-  const isResAddress = resAddress !== undefined;
   const inputRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -44,7 +43,12 @@ const ResidentialAddress = ({
       });
     } else {
       GetCoordinates(address).then((res) => {
-        if (!res?.formatted_address) {
+        if (res?.code === 'ERR_NETWORK') {
+          openModal({
+            message: 'Unable to connect to network.',
+            type: ModalTypes.ERROR,
+          });
+        } else if (!res?.formatted_address) {
           setAddressInfos(undefined);
           openModal({
             message: 'Unable to find address. Please modify search.',
@@ -92,11 +96,12 @@ const ResidentialAddress = ({
                 <span className='label-text'>Address:</span>
               </label>
               <input
-                className='input input-bordered w-full max-w-xs formInput'
+                className='input input-bordered w-full max-w-xs form-input'
                 placeholder='Street, number, city'
                 type='text'
                 ref={inputRef}
                 defaultValue={addressInfos?.inputValueAddress ?? ''}
+                autoComplete='off'
               />
             </div>
             <button
@@ -125,9 +130,9 @@ const ResidentialAddress = ({
           </button>
         </div>
         {addressInfos ? (
-          <div className='comLocation add-address-details'>
+          <div className='location-details add-address-details'>
             <img className='h-20' src={location} alt='location pin' />
-            <p className='comAddress text-center'>
+            <p className='text-secondary text-center'>
               {addressInfos.formatted_address}
             </p>
           </div>
@@ -136,7 +141,7 @@ const ResidentialAddress = ({
             Please add a residential address
           </p>
         )}
-        <div className='clientMapContainer'>
+        <div className='map-container'>
           {addressInfos && (
             <Maps
               lat={addressInfos?.geometry?.location?.lat}
@@ -153,4 +158,4 @@ const ResidentialAddress = ({
     </div>
   );
 };
-export default ResidentialAddress;
+export default React.memo(ResidentialAddress);

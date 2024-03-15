@@ -48,9 +48,9 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
     return (
       <td className='cell-item'>
         <div className='dropdown dropdown-bottom w-full flex justify-center text-center'>
-          <div tabIndex={0} className='mouseHover selectLocation'>
+          <div tabIndex={0} className='mouse-hover select-location'>
             {selectedAddress(time === TimeOfDay.FULL ? TimeOfDay.AM : time)}
-            <img src={downArrow} alt='arrow' />
+            {addresses.length > 0 && <img src={downArrow} alt='arrow' />}
           </div>
           <ul
             tabIndex={0}
@@ -59,7 +59,7 @@ const LocationDropdown = ({ day, time, addresses, updateDay }: Props) => {
             {addresses.map((address, index) => {
               return (
                 <li
-                  className='p-2 mouseHover'
+                  className='p-2 mouse-hover'
                   key={index}
                   onClick={() => changeLocation(address)}
                 >

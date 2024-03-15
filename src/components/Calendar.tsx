@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Address, WDay, WMonth } from '../models/types';
 import WorkdayList from './CalendarComponents/WorkdayList';
-import MonthPicker from './MonthPicker';
+import MonthPicker from './CalendarComponents/MonthPicker';
 import SplitDayToggle from './CalendarComponents/SplitDayToggle';
 
 type CalendarProps = {
@@ -45,7 +45,7 @@ const Calendar = ({
 
   return (
     <div>
-      <h2 className='sectionTitle'>Calendar</h2>
+      <h2 className='section-title'>Calendar</h2>
       <div className='toggle-month-picker'>
         <SplitDayToggle
           isSplitDay={isSplitDay}

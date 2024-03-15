@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from '../assets/icons/Acc_Logo_Black_Purple_RGB.png';
+import logo from '../assets/images/Acc_Logo_Black_Purple_RGB_compressed.png';
 
 const Header = () => {
   return (

@@ -99,7 +99,7 @@ const Attachments = ({
     return (
       <li className='flex w-fit'>
         <button
-          className='iconBtn'
+          className='icon-btn'
           onMouseEnter={() => setIsDeleteHovered(true)}
           onMouseLeave={() => setIsDeleteHovered(false)}
           onClick={() => deleteFile(index)}
@@ -113,7 +113,7 @@ const Attachments = ({
           )}
         </button>
         <p
-          className='mouseHover'
+          className='mouse-hover'
           onClick={() =>
             openModal({
               message: '',
@@ -137,18 +137,18 @@ const Attachments = ({
       <div className='attachments text-sm flex'>
         <form>
           <div className='flex'>
-            <h1>
+            <h1 className='relative'>
               Upload PDF files to be appended to the document (e.g. your rental
               contract or amortization table).
+              <span className='info-icon absolute'>
+                <img
+                  src={info}
+                  alt='Info'
+                  data-tooltip-id='tooltip-attachment-info'
+                  data-tooltip-content='Multiple files can be selected at once. A maximum of three files can be added with a maximum total size of 4MB'
+                />
+              </span>
             </h1>
-            <img
-              className='info-icon'
-              src={info}
-              alt='Info'
-              data-tooltip-id='tooltip-attachment-info'
-              data-tooltip-content='Only
-          accepts files in PDF format. Multiple files can be selected at once. A maximum of three files can be added with a maximum total size of 4MB'
-            />
           </div>
           <Tooltip id='tooltip-attachment-info' />
           <div
@@ -161,7 +161,7 @@ const Attachments = ({
             <label
               htmlFor='uploadedFiles'
               className={
-                files.length > 2
+                files?.length > 2
                   ? 'btn btn-disabled btn-primary'
                   : 'btn btn-primary btn-outline'
               }
@@ -169,7 +169,7 @@ const Attachments = ({
               Choose files
             </label>
           </div>
-          {files.length > 2 && <Tooltip id='tooltip-disabled' />}
+          {files?.length > 2 && <Tooltip id='tooltip-disabled' />}
           <input
             type='file'
             id='uploadedFiles'
@@ -179,8 +179,8 @@ const Attachments = ({
           />
         </form>
         {files && files.length > 0 && (
-          <div className='ml-[40px]'>
-            <h2 className='subSectionTitle'>Uploaded files</h2>
+          <div className='mx-[40px]'>
+            <h2 className='subsection-title'>Uploaded files</h2>
             <ul>
               {Array.from(files)?.map((file, index) => (
                 <FileItem key={index} file={file} index={index} />

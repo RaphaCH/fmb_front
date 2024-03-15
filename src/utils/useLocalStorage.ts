@@ -5,6 +5,8 @@ import {
   ResAddresses,
   StoredFile,
   Workdays,
+  MonthAddresses,
+  ResAddress,
 } from '../models/types';
 
 const useLocalStorage = () => {
@@ -22,8 +24,9 @@ const useLocalStorage = () => {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.log(error);
+      return false;
     }
+    return true;
   };
 
   const dataURLtoFile = (dataurl, filename) => {
@@ -59,11 +62,40 @@ const useLocalStorage = () => {
       }
       return item ? JSON.parse(item) : undefined;
     } catch (error) {
-      console.log(error);
+      return false;
     }
   };
 
-  return { setItem, getItem };
+  const clearWorkdaysAndAddresses = (month: number, year: number) => {
+    const lastResAddress: ResAddress = getItem(
+      StorageTypes.RES_ADDRESSES
+    )?.pop();
+    const lastAddresses: MonthAddresses = getItem(
+      StorageTypes.ADDRESSES
+    )?.pop();
+    if (lastResAddress) {
+      if (
+        setItem(StorageTypes.RES_ADDRESSES, [
+          { ...lastResAddress, month: month, year: year },
+        ]) === false
+      ) {
+        return false;
+      }
+    }
+    if (lastAddresses) {
+      if (
+        setItem(StorageTypes.ADDRESSES, [
+          { ...lastAddresses, month: month, year: year },
+        ]) === false
+      ) {
+        return false;
+      }
+    }
+    localStorage.removeItem(StorageTypes.MAINWORKPLACES);
+    localStorage.removeItem(StorageTypes.WORKDAYS);
+  };
+
+  return { setItem, getItem, clearWorkdaysAndAddresses };
 };
 
 export default useLocalStorage;
