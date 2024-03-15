@@ -1,7 +1,7 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { Address, WDay, WMonth } from '../models/types';
 import WorkdayList from './CalendarComponents/WorkdayList';
-import MonthPicker from './MonthPicker';
+import MonthPicker from './CalendarComponents/MonthPicker';
 import SplitDayToggle from './CalendarComponents/SplitDayToggle';
 
 type CalendarProps = {

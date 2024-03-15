@@ -32,7 +32,6 @@ import Footer from './components/Footer';
 
 function App() {
   const currentDate: Date = new Date();
-  currentDate.setFullYear(2025);
   const { getItem, setItem, clearWorkdaysAndAddresses } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
   const [displayedDate, setDisplayedDate] = useState<Date>(currentDate);
@@ -642,7 +641,10 @@ function App() {
             }
           />
         )}
-        <EligibilityMessage mainWorkplace={mainWorkplace} distance={distance} />
+        <EligibilityMessage
+          mainWorkplaceName={mainWorkplace?.addressName}
+          distance={distance}
+        />
         <Save
           saveData={handleSaveData}
           monthData={monthData}

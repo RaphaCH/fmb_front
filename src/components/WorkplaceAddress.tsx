@@ -43,9 +43,7 @@ const WorkplaceAddress = ({
    * @param address - The unformatted address to be added
    */
   const handleFindAddress = (address: string) => {
-    console.log('Here');
     GetCoordinates(address).then((res) => {
-      console.log(res);
       if (res?.code === 'ERR_NETWORK') {
         openModal({
           message: 'Unable to connect to network.',

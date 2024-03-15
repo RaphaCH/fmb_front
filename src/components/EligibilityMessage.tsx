@@ -1,19 +1,18 @@
 import React from 'react';
-import { Address } from '../models/types';
 
 type Props = {
-  mainWorkplace: Address | null;
+  mainWorkplaceName: string | null;
   distance: number | null;
 };
-const EligibilityMessage = ({ mainWorkplace, distance }: Props) => {
+const EligibilityMessage = ({ mainWorkplaceName, distance }: Props) => {
   return (
     <div id='eligibilityMessage'>
-      {mainWorkplace ? (
+      {mainWorkplaceName ? (
         <p>
           Your main work location this month is{' '}
-          {mainWorkplace.addressName !== 'Residential address' ? (
+          {mainWorkplaceName !== 'Residential address' ? (
             <span>
-              <b>{mainWorkplace.addressName}</b>, which is <b>{distance} km</b>{' '}
+              <b>{mainWorkplaceName}</b>, which is <b>{distance} km</b>{' '}
               away from your residential address.
             </span>
           ) : (
