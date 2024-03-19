@@ -437,8 +437,12 @@ p.error-message {
 }
 
 #eligibilityMessage {
-  margin: 10px;
-  font-size: 0.875rem;
+  margin: 10px 0;
+  font-size: 1rem;
+
+  @media (min-width: $breakpoint-large) {
+    margin: 20px 0;
+  }
 }
 
 #disclaimer {
@@ -449,6 +453,10 @@ p.error-message {
 #footer {
   margin-top: 10px;
   font-size: 0.75rem;
+
+  @media (min-width: $breakpoint-large) {
+    margin-top: 20px;
+  }
 }
 
 .checkbox:indeterminate {

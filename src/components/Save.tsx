@@ -24,7 +24,6 @@ const Save = ({
     <div className='flex w-fit'>
       <button
         className='btn btn-primary'
-        style={{ marginLeft: '10px' }}
         onClick={saveData}
       >
         Save
