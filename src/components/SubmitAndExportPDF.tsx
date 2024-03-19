@@ -55,7 +55,7 @@ const SubmitAndExportPDF = ({
    * Defines and retrieves the paragraph to be displayed between the title and address table
    * @returns - The string of text
    */
-  const getOpeningText = (month: string) => {
+  const getOpeningText = (month: string, formattedUserName: string) => {
     let mainWorkplaceText =
       'I declare that the housing costs, for which I am requesting a reimbursement, have not already been financed with another mobility budget, that my residential address is known by my employer, and that my rental contract or mortgage loan is ongoing. I acknowledge that the information below is correct and aligns with the information submitted in myTE.';
     if (mainWorkplace.addressName === 'Residential address') {
@@ -67,7 +67,7 @@ const SubmitAndExportPDF = ({
       day: '2-digit',
       month: '2-digit',
       year: '2-digit',
-    })}\nName: ${userName}\n\n${mainWorkplaceText}`;
+    })}\nName: ${formattedUserName}\n\n${mainWorkplaceText}`;
   };
 
   const handleButtonClick = () => {
@@ -224,8 +224,9 @@ const SubmitAndExportPDF = ({
    * Generates the PDF file using jsPDF
    */
   const generatePDF = async () => {
+    const formattedUserName = userName.trim();
     const month: string = MonthNames[data.month];
-    const pdfName = `FMB-proof-of-work-location_${userName.replace(
+    const pdfName = `FMB-proof-of-work-location_${formattedUserName.replace(
       / /g,
       '-'
     )}_${month}-${data.year}`;
@@ -253,7 +254,7 @@ const SubmitAndExportPDF = ({
     );
 
     /** OPENING TEXT **/
-    const openingText: string = getOpeningText(month);
+    const openingText: string = getOpeningText(month, formattedUserName);
     doc.setFontSize(9);
     doc.setFont(undefined, 'normal').text(openingText, docMargin, 25, {
       maxWidth: doc.internal.pageSize.width - 2 * docMargin,

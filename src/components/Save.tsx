@@ -22,16 +22,11 @@ const Save = ({
 }: Props) => {
   return (
     <div className='flex w-fit'>
-      <button
-        className='btn btn-primary'
-        onClick={saveData}
-      >
+      <button className='btn btn-primary' onClick={saveData}>
         Save
       </button>
       <SubmitAndExportPDF
-        disabled={
-          !mainWorkplace || (distance && distance > 10) || userName === ''
-        }
+        disabled={!mainWorkplace || (distance && distance > 10) || !userName}
         data={monthData}
         userName={userName}
         addresses={addresses}
