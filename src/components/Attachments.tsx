@@ -154,9 +154,7 @@ const Attachments = ({
           <div
             className='w-fit'
             data-tooltip-id='tooltip-disabled'
-            data-tooltip-content={
-              'Only three files can be uploaded at one time'
-            }
+            data-tooltip-content={'Only three files can be uploaded at a time'}
           >
             <label
               htmlFor='uploadedFiles'
