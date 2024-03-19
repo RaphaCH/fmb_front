@@ -31,6 +31,7 @@ import Disclaimer from './components/Disclaimer';
 import Footer from './components/Footer';
 
 function App() {
+  window.localStorage.clear();
   const currentDate: Date = new Date();
   const { getItem, setItem, clearWorkdaysAndAddresses } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
@@ -88,17 +89,13 @@ function App() {
   const handleNameAndFiles = () => {
     const userName = getItem(StorageTypes.USER_NAME);
     if (userName === false) {
-      openModal({
-        type: ModalTypes.ERROR,
-      });
+      setUserName('');
     } else {
       setUserName(userName);
     }
     const files = getItem(StorageTypes.FILES);
     if (files === false) {
-      openModal({
-        type: ModalTypes.ERROR,
-      });
+      setFiles(null);
     } else {
       setFiles(files);
     }
