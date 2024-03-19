@@ -1,11 +1,11 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
+import { MakerWix } from '@electron-forge/maker-wix';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
-
 import { mainConfig } from './webpack.main.config';
 import { rendererConfig } from './webpack.renderer.config';
 
@@ -16,6 +16,20 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
+    new MakerWix({
+      icon: './src/assets/icons/desktop_icon.ico',
+      language: 1033,
+      ui: {
+        chooseDirectory: true,
+      },
+      features: {
+        autoLaunch: true,
+        autoUpdate: true,
+      },
+      manufacturer: 'Accenture',
+      description:
+        'An Accenture application used to download proof of work location to receive a housing costs reimbursement through the Belgian Federal Mobility Budget',
+    }),
     new MakerSquirrel({
       setupIcon: './src/assets/icons/desktop_icon.ico',
     }),
