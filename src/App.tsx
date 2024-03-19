@@ -61,12 +61,12 @@ function App() {
 
   useEffect(() => {
     if (hasUpdatedDate) {
-      const updatedAddresses: Address[] = handleAddressData();
+      const updatedResAddress: Address = handleAddressData();
       refreshNewYear();
       handleNameAndFiles();
-      handleResAddressData(updatedAddresses);
-      handleMainWorkplaceData(updatedAddresses);
-      handleWorkdayData(updatedAddresses[0]);
+      handleResAddressData(updatedResAddress);
+      handleMainWorkplaceData(updatedResAddress);
+      handleWorkdayData(updatedResAddress);
       setHasUpdatedDate(false);
       setDisplayedDate(selectedDate);
     }
@@ -453,7 +453,7 @@ function App() {
     }
   };
 
-  const handleWorkdayData = (resAddressForMonth: Address) => {
+  const handleWorkdayData = (updatedResAddress: Address) => {
     const selectedMonth = selectedDate.getMonth();
     const selectedYear = selectedDate.getFullYear();
     const storedWorkdayData = getItem(StorageTypes.WORKDAYS) ?? [];
@@ -462,7 +462,7 @@ function App() {
       (m: WMonth) => m.month === selectedMonth && m.year === selectedYear
     );
     if (!month) {
-      month = getNewMonth(resAddressForMonth);
+      month = getNewMonth(updatedResAddress);
       storedWorkdayData.push(month);
     }
     setIsSplitDay(
@@ -481,28 +481,24 @@ function App() {
       (add: MonthAddresses) =>
         add.month === selectedMY.month && add.year === selectedMY.year
     )?.addresses;
-    // If no saved addresses for selected month, retrieve addresses from current month if existing,
-    // else from the latest month (in time) stored
+    // If no saved addresses for selected month, retrieve addresses from the latest saved month (December is the very latest month)
     if (
       !newlySelectedMonthAddresses ||
       newlySelectedMonthAddresses.length < 2
     ) {
       if (allAddresses) {
         newlySelectedMonthAddresses =
-          allAddresses.find(
-            (add: MonthAddresses) =>
-              add.month === currentDate.getMonth() &&
-              add.year === currentDate.getFullYear()
-          )?.addresses ?? allAddresses[allAddresses.length - 1]?.addresses;
+          allAddresses[allAddresses.length - 1]?.addresses;
       } else {
         newlySelectedMonthAddresses = [];
       }
     }
     setAddresses(newlySelectedMonthAddresses);
-    return newlySelectedMonthAddresses;
+    // Return the residential address
+    return newlySelectedMonthAddresses[0];
   };
 
-  const handleResAddressData = (newlySelectedMonthAddresses: Address[]) => {
+  const handleResAddressData = (updatedResAddress: Address) => {
     const newlySelectedResAddress: Address = getItem(
       StorageTypes.RES_ADDRESSES
     )?.find(
@@ -510,11 +506,11 @@ function App() {
         add.month === selectedMY.month && add.year === selectedMY.year
     )?.address;
     const newResAddress: Address =
-      newlySelectedResAddress ?? newlySelectedMonthAddresses[0] ?? undefined;
+      newlySelectedResAddress ?? updatedResAddress ?? undefined;
     setResAddress(newResAddress);
   };
 
-  const handleMainWorkplaceData = (newlySelectedMonthAddresses: Address[]) => {
+  const handleMainWorkplaceData = (updatedResAddress: Address) => {
     const allMainWorkplaces: MainWorkplaces = getItem(
       StorageTypes.MAINWORKPLACES
     );
@@ -525,7 +521,7 @@ function App() {
     const newMainWP: Address =
       newlySelectedMainWP === null
         ? null
-        : newlySelectedMainWP ?? newlySelectedMonthAddresses[0] ?? undefined;
+        : newlySelectedMainWP ?? updatedResAddress ?? undefined;
     setMainWorkplace(newMainWP);
     setDistance(newMainWP?.distanceFromResAdd);
   };
