@@ -75,7 +75,7 @@ const Attachments = ({
     }
     if (count > 3) {
       openModal({
-        message: 'Only three files can be uploaded at one time.',
+        message: 'Only three files can be uploaded at a time.',
         type: ModalTypes.ERROR,
       });
       return false;

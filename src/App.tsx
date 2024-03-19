@@ -31,7 +31,6 @@ import Disclaimer from './components/Disclaimer';
 import Footer from './components/Footer';
 
 function App() {
-  window.localStorage.clear();
   const currentDate: Date = new Date();
   const { getItem, setItem, clearWorkdaysAndAddresses } = useLocalStorage();
   const [selectedDate, setSelectedDate] = useState<Date>(currentDate);
