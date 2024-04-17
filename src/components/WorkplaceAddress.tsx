@@ -126,7 +126,7 @@ const WorkplaceAddress = ({
                 <span className='label-text'>Workplace name:</span>
               </label>
               <input
-                placeholder='Enter name'
+                placeholder='Workplace name'
                 maxLength={19}
                 className={
                   addresses.length < 1 || addresses.length > 10

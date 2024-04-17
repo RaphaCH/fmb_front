@@ -89,7 +89,7 @@ const AlertModal = ({
             <div className='flex flex-col items-center modal-info'>
               <p className='box-title'>Error</p>
               {modalDetails.message ? (
-                <p>{modalDetails.message}</p>
+                <p className='modal-text'>{modalDetails.message}</p>
               ) : (
                 <p className='modal-text'>
                   Sorry, there has been an error. Please try again or inform the

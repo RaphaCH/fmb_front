@@ -92,6 +92,9 @@ const ResidentialAddress = ({
         <div>
           <div className='flex items-end address-row'>
             <div>
+              <p className='text-xs'>
+                Your residential address as indicated on Workday.
+              </p>
               <label className='label'>
                 <span className='label-text'>Address:</span>
               </label>
@@ -129,26 +132,22 @@ const ResidentialAddress = ({
             Save
           </button>
         </div>
-        {addressInfos ? (
-          <div className='location-details add-address-details'>
-            <img className='h-20' src={location} alt='location pin' />
-            <p className='text-secondary text-center'>
-              {addressInfos.formatted_address}
-            </p>
-          </div>
-        ) : (
-          <p className='add-address-details'>
-            Please add a residential address
-          </p>
+        {addressInfos && (
+          <>
+            <div className='location-details add-address-details'>
+              <img className='h-20' src={location} alt='location pin' />
+              <p className='text-secondary text-center'>
+                {addressInfos.formatted_address}
+              </p>
+            </div>
+            <div className='map-container'>
+              <Maps
+                lat={addressInfos?.geometry?.location?.lat}
+                lng={addressInfos?.geometry?.location?.lng}
+              />
+            </div>
+          </>
         )}
-        <div className='map-container'>
-          {addressInfos && (
-            <Maps
-              lat={addressInfos?.geometry?.location?.lat}
-              lng={addressInfos?.geometry?.location?.lng}
-            />
-          )}
-        </div>
       </div>
     );
   };

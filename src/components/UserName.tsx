@@ -10,7 +10,7 @@ const UserName = ({ userName, handleSaveUserName }: Props) => {
       <div className='box-title'>Full name*</div>
       <div className='user-name text-sm'>
         <input
-          placeholder='Enter full name'
+          placeholder='Full name'
           defaultValue={userName}
           onBlur={(e) => handleSaveUserName(e.target.value.trim())}
           className='input input-bordered w-full max-w-xs form-input'

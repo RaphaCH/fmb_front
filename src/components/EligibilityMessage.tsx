@@ -12,8 +12,8 @@ const EligibilityMessage = ({ mainWorkplaceName, distance }: Props) => {
           Your main work location this month is{' '}
           {mainWorkplaceName !== 'Residential address' ? (
             <span>
-              <b>{mainWorkplaceName}</b>, which is <b>{distance} km</b>{' '}
-              away from your residential address.
+              <b>{mainWorkplaceName}</b>, which is <b>{distance} km</b> away
+              from your residential address.
             </span>
           ) : (
             <span>
@@ -26,13 +26,16 @@ const EligibilityMessage = ({ mainWorkplaceName, distance }: Props) => {
       )}
       {distance === 0 || (distance && distance < 10) ? (
         <p>
-          You are <b className='text-green-500'>eligible</b> to receive
-          reimbursement for FMB housing costs.
+          Based on your work location, you are{' '}
+          <b className='text-green-500'>eligible</b> to receive reimbursement
+          for FMB housing costs if all other conditions to benefit from such
+          reimbursement are met.
         </p>
       ) : (
         <p>
-          You are <b className='text-red-500'>not eligible</b> to receive
-          reimbursement for FMB housing costs.
+          Based on your work location, you are{' '}
+          <b className='text-red-500'>not eligible</b> to receive reimbursement
+          for FMB housing costs.
         </p>
       )}
     </div>
