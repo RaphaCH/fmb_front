@@ -23,7 +23,7 @@ The installation file (Windows Installer Package) is found in ./out/make/wix/x64
 │   ├── make
 │   │   ├── wix
 │   │   │   ├── x64
-│   │   │   │   ├── FMB Housing Costs - Proof of Work Location.msi
+│   │   │   │   └──  FMB Housing Costs - Proof of Work Location.msi
 ├── src
 │   ├── assets
 │   │   ├── fonts
