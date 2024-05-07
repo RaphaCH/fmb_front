@@ -18,6 +18,7 @@ The installation file (Windows Installer Package) is found in ./out/make/wix/x64
 
 ## Code structure
 
+```
 ├── out
 │   ├── make
 │   │   ├── wix
@@ -88,3 +89,4 @@ The installation file (Windows Installer Package) is found in ./out/make/wix/x64
 ├── webpack.plugins.ts
 ├── webpack.renderer.config.ts
 └── webpack.rules.ts
+```
