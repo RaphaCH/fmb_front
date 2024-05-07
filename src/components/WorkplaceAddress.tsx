@@ -6,7 +6,7 @@ import { ModalTypes } from '../models/enums';
 import { APIAddress, Address, ModalDetails } from '../models/types';
 import GetCoordinates from '../axios/GetCoordinates';
 import location from '../assets/icons/location.png';
-import getDistance from '../utils/getDistance';
+import getDistance from '../utils/GetDistance';
 import AddressList from './AddressList';
 
 type Props = {

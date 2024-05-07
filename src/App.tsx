@@ -25,7 +25,7 @@ import Calendar from './components/Calendar';
 import ResidentialAddress from './components/ResidentialAddress';
 import Header from './components/Header';
 import EligibilityMessage from './components/EligibilityMessage';
-import getDistance from './utils/getDistance';
+import getDistance from './utils/GetDistance';
 import toBase64 from './utils/toBase64';
 import Disclaimer from './components/Disclaimer';
 import Footer from './components/Footer';
