@@ -12,20 +12,37 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    new MakerWix({
-      icon: './src/assets/icons/desktop_icon.ico',
-      language: 1033,
-      ui: {
-        chooseDirectory: true,
+    {
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin', 'win32', 'linux', 'macos'],
+      config: {}
+    }
+    // new MakerWix({
+    //   icon: './src/assets/icons/desktop_icon.ico',
+    //   language: 1033,
+    //   ui: {
+    //     chooseDirectory: true,
+    //   },
+    //   features: {
+    //     autoLaunch: true,
+    //     autoUpdate: true,
+    //   },
+    //   manufacturer: 'Accenture',
+    //   description:
+    //     'An Accenture application used to download proof of work location to receive a housing costs reimbursement through the Belgian Federal Mobility Budget',
+    // }),
+  ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'RaphaCH',
+          name: 'fmb_front',
+        },
+        prerelease: true,
       },
-      features: {
-        autoLaunch: true,
-        autoUpdate: true,
-      },
-      manufacturer: 'Accenture',
-      description:
-        'An Accenture application used to download proof of work location to receive a housing costs reimbursement through the Belgian Federal Mobility Budget',
-    }),
+    },
   ],
   plugins: [
     new AutoUnpackNativesPlugin({}),
