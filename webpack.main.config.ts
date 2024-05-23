@@ -18,3 +18,4 @@ export const mainConfig: Configuration = {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.scss', '.json'],
   },
 };
+

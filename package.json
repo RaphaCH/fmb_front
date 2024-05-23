@@ -11,7 +11,8 @@
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx .",
     "test": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "build": "electron-builder"
   },
   "author": "Accenture",
   "license": "MIT",
@@ -39,6 +40,7 @@
     "css-loader": "^6.10.0",
     "dotenv-webpack": "^8.0.1",
     "electron": "28.2.3",
+    "electron-builder": "^24.13.3",
     "electron-wix-msi": "^5.1.3",
     "eslint": "^8.56.0",
     "eslint-plugin-import": "^2.29.1",
@@ -76,5 +78,29 @@
     "react-hook-form": "^7.50.1",
     "react-modal": "^3.16.1",
     "react-tooltip": "^5.26.2"
+  },
+  "build": {
+    "appId": "com.electron.fmb-proof-of-work-location",
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "zip"
+      ],
+      "icon": "src/assets/icons/desktop_icon.ico"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb",
+        "zip"
+      ]
+    }
   }
 }
