@@ -12,10 +12,17 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
+    // {
+    //   name: '@electron-forge/maker-zip',
+    //   platforms: ['darwin', 'win32', 'linux'],
+    //   config: {}
+    // },
     {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin', 'win32', 'linux', 'macos'],
-      config: {}
+      name: '@electron-forge/maker-dmg',
+      config: {
+        background: './src/assets/icons/desktop_icon.ico',
+        format: 'ULFO'
+      }
     }
     // new MakerWix({
     //   icon: './src/assets/icons/desktop_icon.ico',
