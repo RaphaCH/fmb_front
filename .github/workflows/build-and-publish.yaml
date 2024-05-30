@@ -16,10 +16,11 @@ jobs:
         with:
           node-version: latest
 
-      - name: Install Python and distutils
+      - name: Install Python 3 and distutils
         run: |
-          sudo pip install --upgrade pip
-          sudo pip install setuptools
+          brew install python@3.10
+          python3 -m ensurepip
+          python3 -m pip install --upgrade pip setuptools
 
       - name: Install dependencies
         run: npm ci
