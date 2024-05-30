@@ -14,13 +14,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: latest
+          node-version: 16
 
-      - name: Install Python 3 and distutils
+      - name: Install Python and distutils
         run: |
-          brew install python@3.10
-          python3 -m ensurepip
-          python3 -m pip install --upgrade pip setuptools
+          brew install python@3.9
+          python3.9 -m ensurepip
+          python3.9 -m pip install --upgrade pip setuptools
+
+      - name: Set Python 3.9 as default
+        run: |
+          ln -sf /opt/homebrew/bin/python3.9 /usr/local/bin/python3
+          ln -sf /opt/homebrew/bin/pip3.9 /usr/local/bin/pip3
 
       - name: Install dependencies
         run: npm ci
