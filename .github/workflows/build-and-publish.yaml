@@ -16,14 +16,12 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Python and distutils
+      - name: Ensure Python and distutils
         run: |
           brew install python@3.9
           python3.9 -m ensurepip
           python3.9 -m pip install --upgrade pip setuptools
-
-      - name: Set Python 3.9 as default
-        run: |
+          python3.9 -m pip install distutils
           ln -sf /opt/homebrew/bin/python3.9 /usr/local/bin/python3
           ln -sf /opt/homebrew/bin/pip3.9 /usr/local/bin/pip3
 
