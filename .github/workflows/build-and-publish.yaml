@@ -16,12 +16,20 @@ jobs:
         with:
           node-version: 18
 
-      - name: Ensure Python and distutils
+      - name: Install required dependencies
+        run: |
+          brew install nvm
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+          nvm install 18
+          nvm use 18
+          nvm alias default 18
+
+      - name: Install Python and distutils
         run: |
           brew install python@3.9
           python3.9 -m ensurepip
           python3.9 -m pip install --upgrade pip setuptools
-          python3.9 -m pip install distutils
           ln -sf /opt/homebrew/bin/python3.9 /usr/local/bin/python3
           ln -sf /opt/homebrew/bin/pip3.9 /usr/local/bin/pip3
 
