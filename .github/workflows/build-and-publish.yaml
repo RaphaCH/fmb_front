@@ -16,16 +16,7 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install required dependencies
-        run: |
-          brew install nvm
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
-          nvm install 18
-          nvm use 18
-          nvm alias default 18
-
-      - name: Install Python and distutils
+      - name: Install Python and dependencies
         run: |
           brew install python@3.9
           python3.9 -m ensurepip
@@ -33,11 +24,11 @@ jobs:
           ln -sf /opt/homebrew/bin/python3.9 /usr/local/bin/python3
           ln -sf /opt/homebrew/bin/pip3.9 /usr/local/bin/pip3
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: Install appdmg
         run: npm install --save-dev appdmg
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Build and package application
         run: npm run make
