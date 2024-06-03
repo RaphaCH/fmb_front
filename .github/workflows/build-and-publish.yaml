@@ -16,13 +16,10 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Python and dependencies
-        run: |
-          brew install python@3.9
-          python3.9 -m ensurepip
-          python3.9 -m pip install --upgrade pip setuptools
-          ln -sf /opt/homebrew/bin/python3.9 /usr/local/bin/python3
-          ln -sf /opt/homebrew/bin/pip3.9 /usr/local/bin/pip3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
       - name: Install appdmg
         run: npm install --save-dev appdmg
