@@ -21,7 +21,7 @@ const config: ForgeConfig = {
       name: '@electron-forge/maker-dmg',
       config: {
         background: './src/assets/icons/desktop_icon.ico',
-        name: 'FMBHousingCostsProof',
+        name: 'FMB-Housing-Costs-Tool',
         format: 'ULFO'
       }
     }
