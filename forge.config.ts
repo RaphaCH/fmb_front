@@ -12,19 +12,19 @@ const config: ForgeConfig = {
   },
   rebuildConfig: {},
   makers: [
-    // {
-    //   name: '@electron-forge/maker-zip',
-    //   platforms: ['darwin', 'win32', 'linux'],
-    //   config: {}
-    // },
     {
-      name: '@electron-forge/maker-dmg',
-      config: {
-        background: './src/assets/icons/desktop_icon.ico',
-        name: 'FMB-Housing-Costs-Tool',
-        format: 'ULFO'
-      }
-    }
+      name: '@electron-forge/maker-zip',
+      platforms: ['darwin'],
+      config: {}
+    },
+    // {
+    //   name: '@electron-forge/maker-dmg',
+    //   config: {
+    //     background: './src/assets/icons/desktop_icon.ico',
+    //     name: 'FMB-Housing-Costs-Tool',
+    //     format: 'ULFO'
+    //   }
+    // }
     // new MakerWix({
     //   icon: './src/assets/icons/desktop_icon.ico',
     //   language: 1033,
@@ -40,18 +40,18 @@ const config: ForgeConfig = {
     //     'An Accenture application used to download proof of work location to receive a housing costs reimbursement through the Belgian Federal Mobility Budget',
     // }),
   ],
-  publishers: [
-    {
-      name: '@electron-forge/publisher-github',
-      config: {
-        repository: {
-          owner: 'RaphaCH',
-          name: 'fmb_front',
-        },
-        prerelease: true,
-      },
-    },
-  ],
+  // publishers: [
+  //   {
+  //     name: '@electron-forge/publisher-github',
+  //     config: {
+  //       repository: {
+  //         owner: 'RaphaCH',
+  //         name: 'fmb_front',
+  //       },
+  //       prerelease: true,
+  //     },
+  //   },
+  // ],
   plugins: [
     new AutoUnpackNativesPlugin({}),
     new WebpackPlugin({
